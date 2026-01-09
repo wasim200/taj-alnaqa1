@@ -1,6 +1,9 @@
 [build]
-  # base = "" # Removed as repo is root
   command = "npm run build"
+  ## publish = ".next" # Commented out to let plugin handle it
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [build.environment]
   SECRETS_SCAN_ENABLED = "false"
