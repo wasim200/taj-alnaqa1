@@ -19,6 +19,15 @@ export default function AdminLayout({
         { name: 'السحب', href: '/admin/winner', icon: Trophy },
     ];
 
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            window.location.href = '/admin/login';
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
+    };
+
     return (
         <div className="min-h-screen flex flex-col md:flex-row">
             {/* Sidebar */}
@@ -46,7 +55,10 @@ export default function AdminLayout({
                     })}
                 </nav>
 
-                <button className="flex items-center gap-3 p-3 text-red-400 hover:bg-red-900/20 rounded-lg mt-auto transition">
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 p-3 text-red-400 hover:bg-red-900/20 rounded-lg mt-auto transition w-full"
+                >
                     <LogOut className="w-5 h-5" />
                     <span>تسجيل خروج</span>
                 </button>
