@@ -1,6 +1,5 @@
 [build]
   # base = "" # Removed as repo is root
-  publish = ".next"
   command = "npm run build"
 
 [build.environment]
