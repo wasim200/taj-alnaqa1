@@ -15,10 +15,10 @@
     "qrious": "^4.0.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "sweetalert2": "^11.26.17"
+    "sweetalert2": "^11.26.17",
+    "@netlify/plugin-nextjs": "^5.15.4"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^5.15.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
