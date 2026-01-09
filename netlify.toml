@@ -1,0 +1,7 @@
+[build]
+  # base = "" # Removed as repo is root
+  publish = ".next"
+  command = "npm run build"
+
+[context.production]
+  environment = { NODE_ENV = "production" }

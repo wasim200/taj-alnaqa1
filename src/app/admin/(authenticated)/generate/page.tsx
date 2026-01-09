@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { MagicWand, Loader } from 'lucide-react';
+import { Wand2, Loader } from 'lucide-react';
 
 export default function GenerateCodes() {
     const [batchName, setBatchName] = useState('');
@@ -10,6 +10,7 @@ export default function GenerateCodes() {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleGenerate = async (e: React.FormEvent) => {
+        // ... (unchanged)
         e.preventDefault();
         setIsLoading(true);
 
@@ -40,7 +41,7 @@ export default function GenerateCodes() {
             <div className="glass-card p-8">
                 <div className="text-center mb-8">
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-[#004D25]">
-                        <MagicWand className="w-8 h-8" />
+                        <Wand2 className="w-8 h-8" />
                     </div>
                     <h2 className="text-2xl font-bold text-[#004D25]">إصدار أكواد جديدة</h2>
                     <p className="text-gray-500 mt-2">قم بتوليد دفعة جديدة من الأكواد للطباعة</p>
@@ -87,7 +88,7 @@ export default function GenerateCodes() {
                             </>
                         ) : (
                             <>
-                                <MagicWand className="w-5 h-5" />
+                                <Wand2 className="w-5 h-5" />
                                 <span>توليد الأكواد</span>
                             </>
                         )}
