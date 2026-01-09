@@ -46,30 +46,33 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      // API call placeholder
-      /*
       const res = await fetch('/api/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, phone, code })
       });
       const data = await res.json();
-      */
 
-      // Simulation for now
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (data.success) {
+        Swal.fire({
+          icon: "success",
+          title: "تم الاشتراك بنجاح!",
+          text: "انتظر السحب قريباً. حظاً موفقاً! 🎉",
+          confirmButtonColor: "#004D25"
+        });
 
-      Swal.fire({
-        icon: "success",
-        title: "تم الاشتراك بنجاح!",
-        text: "انتظر السحب قريباً. حظاً موفقاً! 🎉",
-        confirmButtonColor: "#004D25"
-      });
-
-      // Reset form
-      setName("");
-      setPhone("");
-      setCode("");
+        // Reset form
+        setName("");
+        setPhone("");
+        setCode("");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: data.message || "حدث خطأ غير متوقع",
+          confirmButtonColor: "#d33"
+        });
+      }
 
     } catch (error) {
       Swal.fire({ icon: "error", title: "خطأ", text: "حدث خطأ أثناء الاتصال بالخادم" });
