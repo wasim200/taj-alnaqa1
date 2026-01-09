@@ -6,8 +6,13 @@ export async function POST(req: Request) {
 
         // Verification Logic (Hardcoded for now as per plan, or use DB User model)
         // Using hardcoded for initial migration simplicity as requested in simulating login
-        const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-        const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'admin123';
+        const ADMIN_USER = process.env.ADMIN_USER;
+        const ADMIN_PASS = process.env.ADMIN_PASSWORD;
+
+        if (!ADMIN_USER || !ADMIN_PASS) {
+            console.error("Admin credentials not configured in environment variables.");
+            return NextResponse.json({ success: false, message: 'Server Configuration Error' }, { status: 500 });
+        }
 
         if (username === ADMIN_USER && password === ADMIN_PASS) {
             // Create response
