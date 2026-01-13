@@ -33,11 +33,17 @@ interface StickerCardProps {
 function StickerCard({ code }: StickerCardProps) {
     return (
         <div
-            className="border border-dashed border-gray-300 print:border-gray-400 p-2 flex flex-col items-center justify-between text-center relative break-inside-avoid overflow-hidden"
+            className="p-2 flex flex-col items-center justify-between text-center relative break-inside-avoid overflow-hidden"
             style={{
                 height: '52mm',
                 width: '100%',
-                fontSize: '9px'
+                fontSize: '9px',
+                borderRadius: '24px', // Smooth rounded corners suitable for bottles
+                border: '3px solid transparent',
+                backgroundImage: 'linear-gradient(white, white), linear-gradient(to bottom, #ff9a9e, #fecfef, #ff9a9e)', // Red/Pinkish gradient
+                backgroundOrigin: 'border-box',
+                backgroundClip: 'padding-box, border-box',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)' // Slight shadow for depth
             }}
         >
             {/* 1. Header */}
