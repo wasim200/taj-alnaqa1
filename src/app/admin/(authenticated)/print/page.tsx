@@ -7,7 +7,8 @@ import { Printer } from 'lucide-react';
 // --- Components ---
 
 // Wrapper for QRious
-function QRCode({ value, size = 100 }: { value: string, size?: number }) {
+// Wrapper for QRious
+function QRCode({ value, size = 100, color = 'black' }: { value: string, size?: number, color?: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -17,11 +18,11 @@ function QRCode({ value, size = 100 }: { value: string, size?: number }) {
                 value: value,
                 size: size,
                 background: 'white',
-                foreground: 'black',
+                foreground: color,
                 level: 'H'
             });
         }
-    }, [value, size]);
+    }, [value, size, color]);
 
     return <canvas ref={canvasRef} width={size} height={size} />;
 }
@@ -31,51 +32,62 @@ interface StickerCardProps {
 }
 
 function StickerCard({ code }: StickerCardProps) {
+    // Theme Color based on the provided image (Dark Maroon/Brown)
+    const themeColor = '#4a0404'; // Approximate dark red from image
+
     return (
         <div
-            className="p-2 flex flex-col items-center justify-between text-center relative break-inside-avoid overflow-hidden"
+            className="flex flex-col items-center justify-center text-center relative break-inside-avoid"
             style={{
-                height: '52mm',
+                height: '65mm', // Slightly taller for the droplet point
                 width: '100%',
                 fontSize: '9px',
-                borderRadius: '24px', // Smooth rounded corners suitable for bottles
-                border: '3px solid transparent',
-                backgroundImage: 'linear-gradient(white, white), linear-gradient(to bottom, #ff9a9e, #fecfef, #ff9a9e)', // Red/Pinkish gradient
-                backgroundOrigin: 'border-box',
-                backgroundClip: 'padding-box, border-box',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)' // Slight shadow for depth
+                // Using SVG background for the exact droplet shape and border
+                backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' viewBox='0 0 200 260' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M 100 5 C 150 80 195 130 195 180 A 95 95 0 0 1 5 180 C 5 130 50 80 100 5 Z' fill='white' stroke='${encodeURIComponent(themeColor)}' stroke-width='5' /%3e%3c/svg%3e")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                padding: '25mm 5mm 15mm 5mm', // Padding to push content down from the point
             }}
         >
-            {/* 1. Header */}
-            <h3 className="text-[#004D25] font-bold text-[8px] leading-tight w-full">
-                كن أنت الفائز مع تاج النقاء للمنظفات
-            </h3>
+            <div className="flex flex-col items-center justify-between h-full w-full max-w-[80%] mx-auto pt-4">
+                {/* 1. Header */}
+                <div className="mb-1">
+                    <h3 style={{ color: themeColor }} className="font-extrabold text-[10px] leading-tight">
+                        كن أنت الفائز مع
+                    </h3>
+                    <h3 style={{ color: themeColor }} className="font-extrabold text-[10px] leading-tight">
+                        تاج النقاء للمنظفات
+                    </h3>
+                </div>
 
-            {/* 2. Code */}
-            <div className="my-[1px]">
-                <span className="bg-gray-100 print:bg-gray-200 px-2 py-0.5 rounded text-xs font-mono font-black tracking-widest text-black border border-black/20">
-                    {code}
-                </span>
-            </div>
+                {/* 2. Code */}
+                <div className="my-1 w-full flex justify-center">
+                    <span className="bg-gray-200 px-4 py-1 rounded-lg text-sm font-mono font-black tracking-widest text-black shadow-inner border border-gray-300 block">
+                        {code}
+                    </span>
+                </div>
 
-            {/* 3. Scratch Instruction */}
-            {/* 3. Scratch Instruction */}
-            <p className="text-[7px] text-gray-700 font-bold leading-tight px-1 flex items-center justify-center gap-1 flex-wrap">
-                <span>للدخول في السحب اخدش الكود وارسل الرمز والاسم عبر الواتساب للرقم:</span>
-                <span className="flex items-center gap-0.5 dir-ltr">
-                    <svg viewBox="0 0 24 24" width="10" height="10" fill="#25D366" xmlns="http://www.w3.org/2000/svg"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.654-.696c1.025.558 1.987.896 3.129.896 3.183 0 5.768-2.587 5.768-5.766-.001-3.18-2.585-5.768-5.766-5.768zm0 10.154c-1.028 0-1.782-.284-2.553-.788l-1.636.429.438-1.594c-.585-.86-1.129-1.89-1.129-2.922 0-2.43 1.977-4.406 4.407-4.406 2.43 0 4.406 1.977 4.406 4.406 0 2.429-1.976 4.406-4.406 4.406z" /></svg>
-                    774987789
-                </span>
-            </p>
+                {/* 3. Scratch Instruction */}
+                <div className="mb-1">
+                    <p className="text-[7px] font-bold leading-tight" style={{ color: 'black' }}>
+                        للدخول في السحب اخدش الكود وارسل الرمز
+                    </p>
+                    <p className="text-[7px] font-bold leading-tight flex items-center justify-center gap-1" style={{ color: 'black' }}>
+                        <span>والاسم للرقم</span>
+                        <span className="text-[8px]">774987789</span>
+                    </p>
+                </div>
 
-            {/* 5. Footer (Moved Up) */}
-            <p className="text-[7px] text-gray-600 font-bold mt-1 mb-0.5">
-                للتسجيل التلقائي امسح الباركود
-            </p>
+                {/* 4. QR Code */}
+                <div className="">
+                    <QRCode value={`https://taj-alnaqa.vercel.app`} size={55} color={themeColor} />
+                </div>
 
-            {/* 4. QR Code */}
-            <div className="">
-                <QRCode value={`https://taj-alnaqa.vercel.app`} size={60} />
+                {/* 5. Footer */}
+                <p className="text-[7px] font-bold mt-0.5" style={{ color: 'black' }}>
+                    للتسجيل التلقائي امسح الباركود
+                </p>
             </div>
         </div>
     );
