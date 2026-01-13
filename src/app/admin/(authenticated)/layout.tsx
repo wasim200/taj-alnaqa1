@@ -14,7 +14,7 @@ export default function AdminLayout({
     const navItems = [
         { name: 'الرئيسية', href: '/admin/dashboard', icon: LayoutDashboard },
         { name: 'إصدار الأكواد', href: '/admin/generate', icon: Wand2 },
-        { name: 'طباعة البطائق', href: '/admin/print', icon: Home }, // Using Home icon as placeholder or Printer
+        { name: 'طباعة الكروت', href: '/admin/print', icon: Home }, // Using Home icon as placeholder or Printer
         { name: 'المشتركين', href: '/admin/participants', icon: Users },
         { name: 'السحب', href: '/admin/winner', icon: Trophy },
     ];

@@ -71,9 +71,9 @@ export default function PrintPage() {
                     <div>
                         <h1 className="text-2xl font-bold text-[#004D25] flex items-center gap-2">
                             <Printer className="w-6 h-6" />
-                            طباعة البطائق
+                            طباعة الكروت
                         </h1>
-                        <p className="text-gray-500 text-sm mt-1">اختر الدفعة لطباعة أكواد الكروت</p>
+                        <p className="text-gray-500 text-sm mt-1">اختر الدفعة لطباعة أكواد الكروت (20 كرت في الصفحة)</p>
                     </div>
 
                     <div className="flex flex-wrap items-end gap-3 w-full md:w-auto">
@@ -86,18 +86,6 @@ export default function PrintPage() {
                             >
                                 <option value="">-- اختر --</option>
                                 {batches.map(b => <option key={b} value={b}>{b}</option>)}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">الأعمدة</label>
-                            <select
-                                className="p-2 border rounded-lg text-sm"
-                                value={cols}
-                                onChange={(e) => setCols(parseInt(e.target.value))}
-                            >
-                                <option value={3}>3 أعمدة</option>
-                                <option value={4}>4 أعمدة</option>
                             </select>
                         </div>
 
@@ -121,33 +109,50 @@ export default function PrintPage() {
             </header>
 
             {/* Print Area */}
+            {/* A4 is roughly 210mm x 297mm. 4 cols x 5 rows = 20 cards. */}
+            {/* Each card approx 52mm x 59mm minus margins. */}
             <div
-                className={`grid gap-4 print:gap-2 mx-auto`}
+                className="grid gap-0 mx-auto print:mx-0 print:w-full"
                 style={{
-                    gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                    gridTemplateColumns: 'repeat(4, 1fr)', // 4 columns
                     width: '100%'
                 }}
             >
                 {codes.map((item, index) => (
                     <div
                         key={item._id || index}
-                        className="border-2 border-dashed border-gray-300 print:border-gray-800 rounded-lg p-4 flex flex-col items-center justify-center text-center relative break-inside-avoid"
-                        style={{ height: '220px' }} // Fixed height for consistency
+                        className="border border-dashed border-gray-300 print:border-gray-400 p-2 flex flex-col items-center justify-between text-center relative break-inside-avoid overflow-hidden"
+                        style={{
+                            height: '52mm', // Tweak height to fit 5 rows per page (approx 297/5 = 59mm, keeping specific size for margins)
+                            width: '100%',
+                            fontSize: '9px' // Base font size
+                        }}
                     >
-                        <h3 className="text-[#004D25] font-bold text-sm mb-2 flex items-center gap-1">
-                            <span className="text-[#D4AF37]">👑</span> تاج النقاء
+                        {/* 1. Header */}
+                        <h3 className="text-[#004D25] font-bold text-[8px] leading-tight w-full">
+                            كن أنت الفائز مع تاج النقاء للمنظفات
                         </h3>
 
-                        <div className="mb-2">
-                            <QRCode value={`https://taj-alnaqa.vercel.app`} size={80} />
+                        {/* 2. Code */}
+                        <div className="my-[1px]">
+                            <span className="bg-gray-100 print:bg-gray-200 px-2 py-0.5 rounded text-xs font-mono font-black tracking-widest text-black border border-black/20">
+                                {item.code}
+                            </span>
                         </div>
 
-                        <div className="bg-gray-100 print:bg-gray-200 px-3 py-1 rounded text-sm font-mono font-bold tracking-widest text-black">
-                            {item.code}
+                        {/* 3. Scratch Instruction */}
+                        <p className="text-[7px] text-gray-700 font-bold leading-tight px-1">
+                            للدخول في السحب اخدش الكود وارسل الرمز والاسم للرقم 774987789
+                        </p>
+
+                        {/* 4. QR Code */}
+                        <div className="">
+                            <QRCode value={`https://taj-alnaqa.vercel.app`} size={50} />
                         </div>
 
-                        <p className="text-[10px] text-gray-500 mt-2">
-                            امسح الكود للدخول للسحب
+                        {/* 5. Footer */}
+                        <p className="text-[7px] text-gray-600 font-bold">
+                            للتسجيل التلقائي امسح الباركود
                         </p>
                     </div>
                 ))}
@@ -161,8 +166,19 @@ export default function PrintPage() {
 
             <style jsx global>{`
           @media print {
-             @page { margin: 0.5cm; }
-             body { background: white; -webkit-print-color-adjust: exact; }
+             @page { 
+                size: A4; 
+                margin: 5mm; 
+             }
+             body { 
+                background: white; 
+                -webkit-print-color-adjust: exact; 
+             }
+             /* Ensure grid flows correctly */
+             .grid {
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+             }
           }
        `}</style>
         </div>
