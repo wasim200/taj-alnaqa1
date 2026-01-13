@@ -53,18 +53,22 @@ function StickerCard({ code }: StickerCardProps) {
             </div>
 
             {/* 3. Scratch Instruction */}
-            <p className="text-[7px] text-gray-700 font-bold leading-tight px-1">
-                للدخول في السحب اخدش الكود وارسل الرمز والاسم للرقم 774987789
+            <p className="text-[7px] text-gray-700 font-bold leading-tight px-1 flex items-center justify-center gap-1 flex-wrap">
+                <span>للدخول في السحب اخدش الكود وارسل الرمز والاسم للرقم</span>
+                <span className="flex items-center gap-0.5 dir-ltr">
+                    <svg viewBox="0 0 24 24" width="8" height="8" fill="#25D366" xmlns="http://www.w3.org/2000/svg"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.654-.696c1.025.558 1.987.896 3.129.896 3.183 0 5.768-2.587 5.768-5.766-.001-3.18-2.585-5.768-5.766-5.768zm0 10.154c-1.028 0-1.782-.284-2.553-.788l-1.636.429.438-1.594c-.585-.86-1.129-1.89-1.129-2.922 0-2.43 1.977-4.406 4.407-4.406 2.43 0 4.406 1.977 4.406 4.406 0 2.429-1.976 4.406-4.406 4.406z" /></svg>
+                    774987789
+                </span>
             </p>
 
             {/* 5. Footer (Moved Up) */}
-            <p className="text-[7px] text-gray-600 font-bold mt-1">
+            <p className="text-[7px] text-gray-600 font-bold mt-1 mb-0.5">
                 للتسجيل التلقائي امسح الباركود
             </p>
 
             {/* 4. QR Code */}
             <div className="">
-                <QRCode value={`https://taj-alnaqa.vercel.app`} size={50} />
+                <QRCode value={`https://taj-alnaqa.vercel.app`} size={60} />
             </div>
         </div>
     );
