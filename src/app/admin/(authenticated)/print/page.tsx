@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import QRious from 'qrious';
-import { Printer, Filter } from 'lucide-react';
+import { Printer } from 'lucide-react';
+
+// --- Components ---
 
 // Wrapper for QRious
 function QRCode({ value, size = 100 }: { value: string, size?: number }) {
@@ -24,13 +26,61 @@ function QRCode({ value, size = 100 }: { value: string, size?: number }) {
     return <canvas ref={canvasRef} width={size} height={size} />;
 }
 
+interface StickerCardProps {
+    code: string;
+}
+
+function StickerCard({ code }: StickerCardProps) {
+    return (
+        <div
+            className="border border-dashed border-gray-300 print:border-gray-400 p-2 flex flex-col items-center justify-between text-center relative break-inside-avoid overflow-hidden"
+            style={{
+                height: '52mm',
+                width: '100%',
+                fontSize: '9px'
+            }}
+        >
+            {/* 1. Header */}
+            <h3 className="text-[#004D25] font-bold text-[8px] leading-tight w-full">
+                كن أنت الفائز مع تاج النقاء للمنظفات
+            </h3>
+
+            {/* 2. Code */}
+            <div className="my-[1px]">
+                <span className="bg-gray-100 print:bg-gray-200 px-2 py-0.5 rounded text-xs font-mono font-black tracking-widest text-black border border-black/20">
+                    {code}
+                </span>
+            </div>
+
+            {/* 3. Scratch Instruction */}
+            <p className="text-[7px] text-gray-700 font-bold leading-tight px-1">
+                للدخول في السحب اخدش الكود وارسل الرمز والاسم للرقم 774987789
+            </p>
+
+            {/* 4. QR Code */}
+            <div className="">
+                <QRCode value={`https://taj-alnaqa.vercel.app`} size={50} />
+            </div>
+
+            {/* 5. Footer */}
+            <p className="text-[7px] text-gray-600 font-bold">
+                للتسجيل التلقائي امسح الباركود
+            </p>
+        </div>
+    );
+}
+
+// --- Main Page ---
+
 export default function PrintPage() {
     const [batches, setBatches] = useState<string[]>([]);
     const [selectedBatch, setSelectedBatch] = useState('');
     const [codes, setCodes] = useState<any[]>([]);
     const [loadingBatches, setLoadingBatches] = useState(true);
     const [loadingCodes, setLoadingCodes] = useState(false);
-    const [cols, setCols] = useState(3); // 3 or 4 columns
+
+    // Fixed columns for A4
+    const cols = 4;
 
     // Fetch Batches
     useEffect(() => {
@@ -47,7 +97,7 @@ export default function PrintPage() {
         if (!selectedBatch) return;
         setLoadingCodes(true);
         try {
-            const res = await fetch(`/api/admin/codes?batch=${encodeURIComponent(selectedBatch)}&limit=1000`); // Limit for demo
+            const res = await fetch(`/api/admin/codes?batch=${encodeURIComponent(selectedBatch)}&limit=1000`);
             const data = await res.json();
             if (data.success) {
                 setCodes(data.codes);
@@ -109,52 +159,15 @@ export default function PrintPage() {
             </header>
 
             {/* Print Area */}
-            {/* A4 is roughly 210mm x 297mm. 4 cols x 5 rows = 20 cards. */}
-            {/* Each card approx 52mm x 59mm minus margins. */}
             <div
                 className="grid gap-0 mx-auto print:mx-0 print:w-full"
                 style={{
-                    gridTemplateColumns: 'repeat(4, 1fr)', // 4 columns
+                    gridTemplateColumns: `repeat(${cols}, 1fr)`,
                     width: '100%'
                 }}
             >
                 {codes.map((item, index) => (
-                    <div
-                        key={item._id || index}
-                        className="border border-dashed border-gray-300 print:border-gray-400 p-2 flex flex-col items-center justify-between text-center relative break-inside-avoid overflow-hidden"
-                        style={{
-                            height: '52mm', // Tweak height to fit 5 rows per page (approx 297/5 = 59mm, keeping specific size for margins)
-                            width: '100%',
-                            fontSize: '9px' // Base font size
-                        }}
-                    >
-                        {/* 1. Header */}
-                        <h3 className="text-[#004D25] font-bold text-[8px] leading-tight w-full">
-                            كن أنت الفائز مع تاج النقاء للمنظفات
-                        </h3>
-
-                        {/* 2. Code */}
-                        <div className="my-[1px]">
-                            <span className="bg-gray-100 print:bg-gray-200 px-2 py-0.5 rounded text-xs font-mono font-black tracking-widest text-black border border-black/20">
-                                {item.code}
-                            </span>
-                        </div>
-
-                        {/* 3. Scratch Instruction */}
-                        <p className="text-[7px] text-gray-700 font-bold leading-tight px-1">
-                            للدخول في السحب اخدش الكود وارسل الرمز والاسم للرقم 774987789
-                        </p>
-
-                        {/* 4. QR Code */}
-                        <div className="">
-                            <QRCode value={`https://taj-alnaqa.vercel.app`} size={50} />
-                        </div>
-
-                        {/* 5. Footer */}
-                        <p className="text-[7px] text-gray-600 font-bold">
-                            للتسجيل التلقائي امسح الباركود
-                        </p>
-                    </div>
+                    <StickerCard key={item._id || index} code={item.code} />
                 ))}
             </div>
 
@@ -165,22 +178,22 @@ export default function PrintPage() {
             )}
 
             <style jsx global>{`
-          @media print {
-             @page { 
-                size: A4; 
-                margin: 5mm; 
-             }
-             body { 
-                background: white; 
-                -webkit-print-color-adjust: exact; 
-             }
-             /* Ensure grid flows correctly */
-             .grid {
-                display: grid !important;
-                grid-template-columns: repeat(4, 1fr) !important;
-             }
-          }
-       `}</style>
+                @media print {
+                    @page { 
+                        size: A4; 
+                        margin: 5mm; 
+                    }
+                    body { 
+                        background: white; 
+                        -webkit-print-color-adjust: exact; 
+                    }
+                    /* Ensure grid flows correctly */
+                    .grid {
+                        display: grid !important;
+                        grid-template-columns: repeat(4, 1fr) !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
