@@ -57,15 +57,15 @@ function StickerCard({ code }: StickerCardProps) {
                 للدخول في السحب اخدش الكود وارسل الرمز والاسم للرقم 774987789
             </p>
 
+            {/* 5. Footer (Moved Up) */}
+            <p className="text-[7px] text-gray-600 font-bold mt-1">
+                للتسجيل التلقائي امسح الباركود
+            </p>
+
             {/* 4. QR Code */}
             <div className="">
                 <QRCode value={`https://taj-alnaqa.vercel.app`} size={50} />
             </div>
-
-            {/* 5. Footer */}
-            <p className="text-[7px] text-gray-600 font-bold">
-                للتسجيل التلقائي امسح الباركود
-            </p>
         </div>
     );
 }
