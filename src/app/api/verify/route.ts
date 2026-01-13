@@ -15,12 +15,12 @@ export async function POST(req: Request) {
         if (!/^7\d{8}$/.test(phone)) {
             return NextResponse.json({ success: false, message: 'رقم الهاتف يجب أن يبدأ بـ 7 ويتكون من 9 أرقام' }, { status: 400 });
         }
-        if (!code || !code.startsWith('TAJ-')) {
-            return NextResponse.json({ success: false, message: 'صيغة الكود غير صحيحة' }, { status: 400 });
-        }
 
-        // 2. Rate Limiting Check (Simple impl based on IP or Phone)
-        // Skipped for now to keep it simple, but recommended.
+        // Update Code Validation: Check for FX or FG prefix + 4 digits + 1 char (approx length 7)
+        // Regex: ^(FX|FG)\d{4}[A-Z]$
+        if (!code || !/^(FX|FG)\d{4}[A-Z]$/.test(code)) {
+            return NextResponse.json({ success: false, message: 'صيغة الكود غير صحيحة. تأكد من الكود (مثال: FX1234A)' }, { status: 400 });
+        }
 
         // 3. Find Code
         const codeDoc = await Code.findOne({ code });
@@ -34,27 +34,37 @@ export async function POST(req: Request) {
         }
 
         // 4. Register Participant
-        // Check if phone already won? Maybe allowed multiple times.
+        // Logic: FX -> 2 Chances (2 Entries), FG -> 1 Chance (1 Entry)
+        const isDoubleChance = code.startsWith('FX');
+        const entries = isDoubleChance ? 2 : 1;
+        const participantIds = [];
 
-        // Create Participant
-        const newParticipant = await Participant.create({
-            name,
-            phone,
-            code_entered: code,
-            ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-            user_agent: req.headers.get('user-agent') || 'unknown'
-        });
+        for (let i = 0; i < entries; i++) {
+            const newParticipant = await Participant.create({
+                name,
+                phone,
+                code_entered: code,
+                ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+                user_agent: req.headers.get('user-agent') || 'unknown'
+            });
+            participantIds.push(newParticipant._id);
+        }
 
         // 5. Mark Code as Used
         codeDoc.is_used = true;
-        codeDoc.used_by = newParticipant._id;
+        // Just store the first ID reference for tracking, or maybe change schema to array later (simpler for now)
+        codeDoc.used_by = participantIds[0];
         codeDoc.used_at = new Date();
         await codeDoc.save();
 
+        const successMessage = isDoubleChance
+            ? 'تم تسجيلك بنجاح! مبروك حصلت على فرصتين في السحب لأنك اشتريت المنتج الكبير! 🎉'
+            : 'تم تسجيلك بنجاح في السحب! 🎁';
+
         return NextResponse.json({
             success: true,
-            message: 'تم تسجيلك بنجاح في السحب!',
-            participantId: newParticipant._id
+            message: successMessage,
+            participantId: participantIds[0]
         });
 
     } catch (error) {

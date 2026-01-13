@@ -38,8 +38,8 @@ export default function Home() {
       return;
     }
 
-    if (!code.startsWith("TAJ-") || code.length < 10) {
-      Swal.fire({ icon: "error", title: "الكود غير صحيح", text: "تأكد من إدخال الكود الموجود خلف الكرت (TAJ-XXXXXX)" });
+    if (!/^(FX|FG)\d{4}[A-Z]$/.test(code)) {
+      Swal.fire({ icon: "error", title: "الكود غير صحيح", text: "تأكد من إدخال الكود (مثال: FX1234A أو FG1234B)" });
       return;
     }
 
@@ -57,7 +57,7 @@ export default function Home() {
         Swal.fire({
           icon: "success",
           title: "تم الاشتراك بنجاح!",
-          text: "انتظر السحب قريباً. حظاً موفقاً! 🎉",
+          text: data.message, // Message from backend includes detail about 2 chances
           confirmButtonColor: "#004D25"
         });
 
@@ -92,7 +92,7 @@ export default function Home() {
             <Crown className="w-10 h-10 text-[#D4AF37]" />
             <span>تاج النقاء</span>
           </h1>
-          <p className="text-gray-500 text-lg font-medium">سجل كود الكرت وادخل السحب فورا!</p>
+          <p className="text-gray-500 text-lg font-medium">سجل كود المنتجات الكبيرة أو الصغيرة وادخل السحب!</p>
         </div>
 
         {/* Form */}
@@ -143,12 +143,12 @@ export default function Home() {
                 <div className="bg-[#004D25] text-white text-xs font-bold p-1">تاج النقاء</div>
                 <div className="flex-1 bg-gray-400 relative flex items-center justify-center overflow-hidden">
                   <span className="font-mono font-bold text-gray-800 bg-white/90 px-2 py-1 rounded border border-dashed border-yellow-500 z-0">
-                    TAJ-XXXXXX
+                    FX1234A
                   </span>
                   <Hand className="scratch-hand-icon absolute text-red-600 w-8 h-8 z-10 drop-shadow-md" />
                 </div>
               </div>
-              <p className="text-[#004D25] text-xs font-bold">امسح المنطقة الرمادية خلف الكرت لكشف الكود</p>
+              <p className="text-[#004D25] text-xs font-bold mt-2">الكود يبدأ بـ FX أو FG</p>
             </div>
 
             <label className="block text-[#004D25] font-bold mb-2">كود الخدش</label>
@@ -158,7 +158,7 @@ export default function Home() {
                 value={code}
                 onChange={handleCodeChange}
                 className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 transition bg-white text-gray-800 text-center font-bold tracking-[2px]"
-                placeholder="TAJ-XXXXXX"
+                placeholder="FX1234A"
                 dir="ltr"
                 required
               />

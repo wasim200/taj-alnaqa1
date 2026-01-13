@@ -3,17 +3,22 @@ import dbConnect from '@/lib/db';
 import { Code } from '@/models/Schema';
 import { randomBytes } from 'crypto';
 
-function generateRandomCode() {
-    const hex = randomBytes(3).toString('hex').toUpperCase();
-    return `TAJ-${hex}`;
+function generateRandomCode(prefix: string) {
+    // Format: FX (Prefix) + 4 Digits + 1 Letter
+    // Example: FX1234A
+    const digits = Math.floor(1000 + Math.random() * 9000).toString(); // 4 random digits
+    const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26)); // 1 random letter A-Z
+    return `${prefix}${digits}${letter}`;
 }
 
 export async function POST(req: Request) {
     try {
         await dbConnect();
         const body = await req.json();
-        const { quantity, batch_name } = body;
+        const { quantity, batch_name, prefix } = body;
         const qty = parseInt(quantity);
+
+        const validPrefix = prefix === 'FX' ? 'FX' : 'FG'; // Default to FG if invalid
 
         if (!batch_name || !qty || qty <= 0 || qty > 15000) {
             return NextResponse.json({ success: false, message: 'بيانات غير صحيحة' }, { status: 400 });
@@ -31,7 +36,7 @@ export async function POST(req: Request) {
 
             // Generate a set of unique codes in memory
             while (codesToInsert.size < currentBatchSize) {
-                codesToInsert.add(generateRandomCode());
+                codesToInsert.add(generateRandomCode(validPrefix));
             }
 
             const docs = Array.from(codesToInsert).map(code => ({
@@ -57,7 +62,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({
             success: true,
-            message: `تم توليد ${insertedCount} كود بنجاح في دفعة: ${batch_name}`
+            message: `تم توليد ${insertedCount} كود بنجاح (${validPrefix}) في دفعة: ${batch_name}`
         });
 
     } catch (error) {

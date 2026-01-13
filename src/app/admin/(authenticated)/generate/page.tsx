@@ -7,10 +7,10 @@ import { Wand2, Loader } from 'lucide-react';
 export default function GenerateCodes() {
     const [batchName, setBatchName] = useState('');
     const [quantity, setQuantity] = useState(100);
+    const [prefix, setPrefix] = useState('FG');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleGenerate = async (e: React.FormEvent) => {
-        // ... (unchanged)
         e.preventDefault();
         setIsLoading(true);
 
@@ -18,7 +18,7 @@ export default function GenerateCodes() {
             const res = await fetch('/api/admin/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ batch_name: batchName, quantity })
+                body: JSON.stringify({ batch_name: batchName, quantity, prefix })
             });
             const data = await res.json();
 
@@ -48,6 +48,19 @@ export default function GenerateCodes() {
                 </div>
 
                 <form onSubmit={handleGenerate} className="space-y-6">
+                    {/* Code Type */}
+                    <div>
+                        <label className="block text-[#004D25] font-bold mb-2">نوع المنتج (نوع الكود)</label>
+                        <select
+                            value={prefix}
+                            onChange={(e) => setPrefix(e.target.value)}
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none bg-white"
+                        >
+                            <option value="FG">منتج صغير (FG - فرصة واحدة)</option>
+                            <option value="FX">منتج كبير (FX - فرصتين)</option>
+                        </select>
+                    </div>
+
                     {/* Batch Name */}
                     <div>
                         <label className="block text-[#004D25] font-bold mb-2">اسم الدفعة</label>
