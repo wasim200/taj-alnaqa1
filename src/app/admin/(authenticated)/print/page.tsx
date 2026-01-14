@@ -39,56 +39,56 @@ function StickerCard({ code }: StickerCardProps) {
         <div
             className="flex flex-col items-center justify-center text-center relative break-inside-avoid"
             style={{
-                height: '65mm', // Slightly taller for the droplet point
+                height: '58mm', // Exact height for 5 rows on A4 (297mm / 5 = ~59.4, safe margin 58)
                 width: '100%',
-                fontSize: '9px',
+                fontSize: '8px',
                 // Using SVG background for the exact droplet shape and border
                 backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' viewBox='0 0 200 260' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M 100 5 C 150 80 195 130 195 180 A 95 95 0 0 1 5 180 C 5 130 50 80 100 5 Z' fill='white' stroke='${encodeURIComponent(themeColor)}' stroke-width='5' /%3e%3c/svg%3e")`,
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '12mm 5mm 5mm 5mm', // Padding to push content down from the point
+                padding: '10mm 5mm 5mm 5mm', // Reduced padding
             }}
         >
-            <div className="flex flex-col items-center justify-between h-full w-full max-w-[90%] mx-auto pt-4">
+            <div className="flex flex-col items-center justify-between h-full w-full max-w-[95%] mx-auto pt-2">
                 {/* 1. Header */}
                 <div className="mb-0.5">
-                    <h3 style={{ color: themeColor }} className="font-extrabold text-[10px] leading-tight">
+                    <h3 style={{ color: themeColor }} className="font-extrabold text-[9px] leading-tight">
                         كن أنت الفائز مع
                     </h3>
-                    <h3 style={{ color: themeColor }} className="font-extrabold text-[10px] leading-tight">
+                    <h3 style={{ color: themeColor }} className="font-extrabold text-[9px] leading-tight">
                         تاج النقاء للمنظفات
                     </h3>
                 </div>
 
                 {/* 2. Code */}
                 <div className="my-0.5 w-full flex justify-center">
-                    <span className="bg-gray-200 px-4 py-1 rounded-lg text-sm font-mono font-black tracking-widest text-black shadow-inner border border-gray-300 block">
+                    <span className="bg-gray-200 px-3 py-0.5 rounded-md text-[10px] font-mono font-black tracking-widest text-black shadow-inner border border-gray-300 block">
                         {code}
                     </span>
                 </div>
 
                 {/* 3. Scratch Instruction */}
-                <div className="mb-0.5">
-                    <p className="text-[7px] font-bold leading-tight" style={{ color: 'black' }}>
+                <div className="mb-0.5 leading-none">
+                    <p className="text-[6px] font-bold leading-tight" style={{ color: 'black' }}>
                         لدخولك السحب اخدش وارسل الرمز
                     </p>
-                    <p className="text-[7px] font-bold leading-tight" style={{ color: 'black' }}>
+                    <p className="text-[6px] font-bold leading-tight" style={{ color: 'black' }}>
                         والاسم عبر الواتساب للرقم:
                     </p>
-                    <p className="text-[8px] font-black mt-0.5 flex items-center justify-center gap-1" dir="ltr" style={{ color: 'black' }}>
+                    <p className="text-[7px] font-black mt-0.5 flex items-center justify-center gap-1" dir="ltr" style={{ color: 'black' }}>
                         <span>+967 774987789</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" /></svg>
                     </p>
                 </div>
 
                 {/* 4. QR Code */}
                 <div className="">
-                    <QRCode value={`https://taj-alnaqa.vercel.app`} size={55} color={themeColor} />
+                    <QRCode value={`https://taj-alnaqa.vercel.app`} size={45} color={themeColor} />
                 </div>
 
                 {/* 5. Footer */}
-                <p className="text-[7px] font-bold mt-0.5" style={{ color: 'black' }}>
+                <p className="text-[6px] font-bold mt-0.5" style={{ color: 'black' }}>
                     للتسجيل التلقائي امسح الباركود
                 </p>
             </div>
