@@ -54,6 +54,31 @@ export async function POST(req: Request) {
     }
 }
 
+// PUT: Update a user
+export async function PUT(req: Request) {
+    try {
+        await dbConnect();
+        const body = await req.json();
+        const { id, password, role, permissions } = body;
+
+        if (!id) {
+            return NextResponse.json({ success: false, message: 'User ID required' }, { status: 400 });
+        }
+
+        const updateData: any = {};
+        if (password) updateData.password_hash = password; // Only update if provided
+        if (role) updateData.role = role;
+        if (permissions) updateData.permissions = permissions;
+
+        await User.findByIdAndUpdate(id, updateData);
+
+        return NextResponse.json({ success: true, message: 'User updated successfully' });
+
+    } catch (error) {
+        return NextResponse.json({ success: false, message: 'Server Error' }, { status: 500 });
+    }
+}
+
 // DELETE: Delete a user
 export async function DELETE(req: Request) {
     try {
