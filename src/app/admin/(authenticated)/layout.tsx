@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut, UserPlus, Shield, Settings, Menu, X } from 'lucide-react';
+import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut, UserPlus, Shield, Settings, Menu, X, ClipboardList } from 'lucide-react';
 
 export default function AdminLayout({
     children,
@@ -34,13 +34,19 @@ export default function AdminLayout({
         { name: 'المشتركين', href: '/admin/participants', icon: Users, permission: 'participants' },
         { name: 'السحب', href: '/admin/winner', icon: Trophy, permission: 'winner' },
         { name: 'الموظفين', href: '/admin/users', icon: Shield, permission: 'users' },
+        { name: 'سجل النظام', href: '/admin/logs', icon: ClipboardList, permission: 'logs' }, // Superadmin only
     ];
 
     const navItems = allNavItems.filter(item => {
         if (!user) return false;
         if (user.role === 'superadmin') return true;
+
+        // Dashboard is usually allowed, or check permission
         if (item.permission === 'dashboard') return true;
-        if (item.permission === 'users') return false;
+
+        // Strictly Super Admin only pages
+        if (item.permission === 'users' || item.permission === 'logs') return false;
+
         return user.permissions.includes(item.permission);
     });
 

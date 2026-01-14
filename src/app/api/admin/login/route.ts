@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import dbConnect from '@/lib/db';
 import { User } from '@/models/Schema';
+import { logActivity } from '@/lib/log-activity';
 
 export async function POST(req: Request) {
     try {
@@ -32,6 +33,9 @@ export async function POST(req: Request) {
                 permissions: user.permissions
             }
         });
+
+        // Log the login action
+        await logActivity(user.username, 'LOGIN', 'تم تسجيل الدخول بنجاح');
 
         // Set Cookie
         response.cookies.set('admin_token', 'secure-token-value', {
