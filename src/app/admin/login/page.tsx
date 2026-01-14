@@ -25,6 +25,9 @@ export default function AdminLogin() {
             const data = await res.json();
 
             if (data.success) {
+                // Store user info for permissions handling
+                localStorage.setItem('user', JSON.stringify(data.user)); // Key addition
+
                 router.push('/admin/dashboard');
                 Swal.fire({
                     icon: 'success',

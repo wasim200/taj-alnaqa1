@@ -38,6 +38,9 @@ export const Participant = models.Participant || model('Participant', Participan
 const UserSchema = new Schema({
     username: { type: String, required: true, unique: true },
     password_hash: { type: String, required: true },
+    // New Fields for Permissions
+    role: { type: String, enum: ['superadmin', 'employee'], default: 'employee' },
+    permissions: { type: [String], default: [] }, // e.g. ['generate', 'print', 'manual_entry', 'participants', 'winner']
     created_at: { type: Date, default: Date.now },
 });
 

@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut, UserPlus } from 'lucide-react';
+import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut, UserPlus, Shield } from 'lucide-react';
 
 export default function AdminLayout({
     children,
@@ -11,18 +12,38 @@ export default function AdminLayout({
 }) {
     const pathname = usePathname();
 
-    const navItems = [
-        { name: 'الرئيسية', href: '/admin/dashboard', icon: LayoutDashboard },
-        { name: 'إصدار الأكواد', href: '/admin/generate', icon: Wand2 },
-        { name: 'طباعة الكروت', href: '/admin/print', icon: Home },
-        { name: 'إدخال يدوي', href: '/admin/manual-entry', icon: UserPlus }, // New Feature
-        { name: 'المشتركين', href: '/admin/participants', icon: Users },
-        { name: 'السحب', href: '/admin/winner', icon: Trophy },
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    const allNavItems = [
+        { name: 'الرئيسية', href: '/admin/dashboard', icon: LayoutDashboard, permission: 'dashboard' }, // Always allowed basically
+        { name: 'إصدار الأكواد', href: '/admin/generate', icon: Wand2, permission: 'generate' },
+        { name: 'طباعة الكروت', href: '/admin/print', icon: Home, permission: 'print' },
+        { name: 'إدخال يدوي', href: '/admin/manual-entry', icon: UserPlus, permission: 'manual_entry' },
+        { name: 'المشتركين', href: '/admin/participants', icon: Users, permission: 'participants' },
+        { name: 'السحب', href: '/admin/winner', icon: Trophy, permission: 'winner' },
+        { name: 'الموظفين', href: '/admin/users', icon: Shield, permission: 'users' }, // New
     ];
+
+    const navItems = allNavItems.filter(item => {
+        if (!user) return false;
+        if (user.role === 'superadmin') return true;
+        // Dashboard is always visible to any logged in user? Or maybe restrictive?
+        // Let's assume dashboard is open, others restricted.
+        if (item.permission === 'dashboard') return true;
+        return user.permissions.includes(item.permission);
+    });
 
     const handleLogout = async () => {
         try {
             await fetch('/api/admin/logout', { method: 'POST' });
+            localStorage.removeItem('user'); // Clear client storage
             window.location.href = '/admin/login';
         } catch (error) {
             console.error('Logout failed', error);

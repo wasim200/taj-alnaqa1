@@ -23,7 +23,15 @@ export async function POST(req: Request) {
         }
 
         // Create response
-        const response = NextResponse.json({ success: true, message: 'Login successful' });
+        const response = NextResponse.json({
+            success: true,
+            message: 'Login successful',
+            user: {
+                username: user.username,
+                role: user.role,
+                permissions: user.permissions
+            }
+        });
 
         // Set Cookie
         response.cookies.set('admin_token', 'secure-token-value', {
