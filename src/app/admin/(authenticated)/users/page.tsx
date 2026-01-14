@@ -23,8 +23,7 @@ export default function UsersPage() {
         { id: 'print', label: 'طباعة الكروت' },
         { id: 'manual_entry', label: 'إدخال يدوي' },
         { id: 'participants', label: 'عرض المشتركين' },
-        { id: 'winner', label: 'إجراء السحب' },
-        { id: 'users', label: 'إدارة الموظفين' }
+        { id: 'winner', label: 'إجراء السحب' }
     ];
 
     const fetchUsers = async () => {
@@ -258,8 +257,8 @@ export default function UsersPage() {
                                     <td className="p-4 font-bold text-gray-800">{user.username}</td>
                                     <td className="p-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${user.role === 'superadmin'
-                                                ? 'bg-purple-100 text-purple-700'
-                                                : 'bg-blue-100 text-blue-700'
+                                            ? 'bg-purple-100 text-purple-700'
+                                            : 'bg-blue-100 text-blue-700'
                                             }`}>
                                             {user.role === 'superadmin' ? 'مدير عام' : 'موظف'}
                                         </span>

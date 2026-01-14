@@ -13,6 +13,8 @@ export default function Dashboard() {
         totalParticipants: '0'
     });
 
+    const [user, setUser] = useState<any>(null);
+
     const fetchStats = async () => {
         try {
             const res = await fetch('/api/admin/stats');
@@ -29,6 +31,10 @@ export default function Dashboard() {
 
     useEffect(() => {
         fetchStats();
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
     }, []);
 
     const handleReset = async () => {
@@ -100,24 +106,26 @@ export default function Dashboard() {
                 ))}
             </div>
 
-            {/* Danger Zone */}
-            <section className="glass-card p-6 border-t-4 border-red-500">
-                <div className="flex justify-between items-center flex-wrap gap-4">
-                    <div>
-                        <h3 className="text-xl font-bold text-red-600 flex items-center gap-2">
-                            تهيئة النظام
-                        </h3>
-                        <p className="text-gray-500 text-sm mt-1">إعادة تهيئة النظام وحذف جميع البيانات</p>
+            {/* Danger Zone - Super Admin Only */}
+            {user?.role === 'superadmin' && (
+                <section className="glass-card p-6 border-t-4 border-red-500">
+                    <div className="flex justify-between items-center flex-wrap gap-4">
+                        <div>
+                            <h3 className="text-xl font-bold text-red-600 flex items-center gap-2">
+                                تهيئة النظام
+                            </h3>
+                            <p className="text-gray-500 text-sm mt-1">إعادة تهيئة النظام وحذف جميع البيانات</p>
+                        </div>
+                        <button
+                            onClick={handleReset}
+                            className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition font-bold flex items-center gap-2"
+                        >
+                            <Trash2 className="w-5 h-5" />
+                            إعادة تهيئة قاعدة البيانات
+                        </button>
                     </div>
-                    <button
-                        onClick={handleReset}
-                        className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition font-bold flex items-center gap-2"
-                    >
-                        <Trash2 className="w-5 h-5" />
-                        إعادة تهيئة قاعدة البيانات
-                    </button>
-                </div>
-            </section>
+                </section>
+            )}
         </div>
     );
 }

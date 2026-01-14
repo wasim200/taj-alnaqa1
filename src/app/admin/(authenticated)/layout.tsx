@@ -35,8 +35,11 @@ export default function AdminLayout({
         if (!user) return false;
         if (user.role === 'superadmin') return true;
 
-        // DEBUG: Force show Users menu to verify
-        if (item.permission === 'users' || item.permission === 'dashboard') return true;
+        // Dashboard is usually allowed, or check permission
+        if (item.permission === 'dashboard') return true;
+
+        // "Users" page is strictly Super Admin only
+        if (item.permission === 'users') return false;
 
         return user.permissions.includes(item.permission);
     });
