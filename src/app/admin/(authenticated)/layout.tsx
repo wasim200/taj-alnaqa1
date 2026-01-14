@@ -55,15 +55,21 @@ export default function AdminLayout({
     };
 
     return (
-        <div className="min-h-screen flex bg-gray-50 overflow-hidden">
+        <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
 
-            {/* Mobile Toggle Button */}
-            <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden fixed top-4 left-4 z-50 bg-[#D4AF37] text-[#003318] p-2 rounded-full shadow-lg hover:bg-[#b5952f] transition"
-            >
-                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Settings className="w-6 h-6" />}
-            </button>
+            {/* Mobile Header */}
+            <header className="md:hidden bg-[#003318] text-white p-4 flex justify-between items-center z-40 shadow-md sticky top-0">
+                <div className="flex items-center gap-3">
+                    <Trophy className="text-[#D4AF37] w-6 h-6" />
+                    <span className="text-lg font-bold">تاج النقاء</span>
+                </div>
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="text-white hover:text-[#D4AF37] p-2 transition rounded-full hover:bg-white/10"
+                >
+                    {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Settings className="w-6 h-6" />}
+                </button>
+            </header>
 
             {/* Overlay for Mobile */}
             {isMobileMenuOpen && (
@@ -79,9 +85,14 @@ export default function AdminLayout({
                 md:relative md:translate-x-0 md:shadow-none
                 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
             `}>
-                <div className="flex items-center gap-3 mb-10">
+                <div className="hidden md:flex items-center gap-3 mb-10">
                     <Trophy className="text-[#D4AF37] w-8 h-8" />
                     <span className="text-xl font-bold">تاج النقاء</span>
+                </div>
+                {/* Mobile logo inside sidebar hidden to avoid duplicate if menu is translucent, but keeps structure consistent */}
+                <div className="md:hidden flex items-center gap-3 mb-8 pb-4 border-b border-[#D4AF37]/20">
+                    <Trophy className="text-[#D4AF37] w-6 h-6" />
+                    <span className="text-lg font-bold">القائمة الرئيسية</span>
                 </div>
 
                 <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar">
@@ -119,7 +130,7 @@ export default function AdminLayout({
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-6 md:p-10 overflow-auto w-full h-screen">
+            <main className="flex-1 p-6 md:p-10 overflow-auto w-full">
                 {children}
             </main>
         </div >
