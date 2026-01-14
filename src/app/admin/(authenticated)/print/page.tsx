@@ -39,15 +39,15 @@ function StickerCard({ code }: StickerCardProps) {
         <div
             className="flex flex-col items-center justify-center text-center relative break-inside-avoid"
             style={{
-                height: '55mm', // Exact height for 5 rows on A4 (297 - 10 margin - 12 gaps = 275 / 5 = 55)
+                height: '50mm', // Reduced height to 50mm for maximum safety
                 width: '100%',
                 fontSize: '8px',
-                // Using SVG background for the exact droplet shape and border
-                backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' viewBox='0 0 200 260' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M 100 5 C 150 80 195 130 195 180 A 95 95 0 0 1 5 180 C 5 130 50 80 100 5 Z' fill='white' stroke='${encodeURIComponent(themeColor)}' stroke-width='5' /%3e%3c/svg%3e")`,
+                // Updated SVG viewBox to 280 to fully include the bottom arc + stroke
+                backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' viewBox='0 0 200 280' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M 100 5 C 150 80 195 130 195 180 A 95 95 0 0 1 5 180 C 5 130 50 80 100 5 Z' fill='white' stroke='${encodeURIComponent(themeColor)}' stroke-width='5' /%3e%3c/svg%3e")`,
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '13mm 4mm 5mm 4mm', // Adjusted padding to clear tip and sides
+                padding: '10mm 4mm 4mm 4mm', // Adjusted padding
             }}
         >
             <div className="flex flex-col items-center justify-between h-full w-full max-w-[95%] mx-auto pt-1">
@@ -84,7 +84,7 @@ function StickerCard({ code }: StickerCardProps) {
 
                 {/* 4. QR Code */}
                 <div className="">
-                    <QRCode value={`https://taj-alnaqa.vercel.app`} size={42} color={themeColor} />
+                    <QRCode value={`https://taj-alnaqa.vercel.app`} size={40} color={themeColor} />
                 </div>
 
                 {/* 5. Footer */}
@@ -217,7 +217,7 @@ export default function PrintPage() {
                     .grid {
                         display: grid !important;
                         grid-template-columns: repeat(4, 1fr) !important;
-                        gap: 3mm !important;
+                        gap: 6mm !important;
                     }
                 }
             `}</style>
