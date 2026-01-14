@@ -105,7 +105,7 @@ export default function Dashboard() {
                 <div className="flex justify-between items-center flex-wrap gap-4">
                     <div>
                         <h3 className="text-xl font-bold text-red-600 flex items-center gap-2">
-                            منطقة الخطر
+                            تهيئة النظام
                         </h3>
                         <p className="text-gray-500 text-sm mt-1">إعادة تهيئة النظام وحذف جميع البيانات</p>
                     </div>
