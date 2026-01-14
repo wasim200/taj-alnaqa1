@@ -71,11 +71,11 @@ function StickerCard({ code }: StickerCardProps) {
                 {/* 3. Scratch Instruction */}
                 <div className="mb-1">
                     <p className="text-[7px] font-bold leading-tight" style={{ color: 'black' }}>
-                        للدخول في السحب اخدش الكود وارسل الرمز
+                        لدخولك السحب اخدش وارسل الرمز
                     </p>
                     <p className="text-[7px] font-bold leading-tight flex items-center justify-center gap-1" style={{ color: 'black' }}>
-                        <span>والاسم للرقم</span>
-                        <span className="text-[8px]">774987789</span>
+                        <span>والاسم عبر الواتساب للرقم</span>
+                        <span className="text-[8px] dir-ltr inline-block">+967 774987789</span>
                     </p>
                 </div>
 
