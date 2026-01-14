@@ -47,7 +47,7 @@ function StickerCard({ code }: StickerCardProps) {
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '10mm 4mm 4mm 4mm', // Adjusted padding
+                padding: '12mm 4mm 4mm 4mm', // Adjusted padding
             }}
         >
             <div className="flex flex-col items-center justify-between h-full w-full max-w-[90%] mx-auto pt-1">
