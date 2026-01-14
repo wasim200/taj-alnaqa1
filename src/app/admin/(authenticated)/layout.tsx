@@ -34,9 +34,10 @@ export default function AdminLayout({
     const navItems = allNavItems.filter(item => {
         if (!user) return false;
         if (user.role === 'superadmin') return true;
-        // Dashboard is always visible to any logged in user? Or maybe restrictive?
-        // Let's assume dashboard is open, others restricted.
-        if (item.permission === 'dashboard') return true;
+
+        // DEBUG: Force show Users menu to verify
+        if (item.permission === 'users' || item.permission === 'dashboard') return true;
+
         return user.permissions.includes(item.permission);
     });
 
