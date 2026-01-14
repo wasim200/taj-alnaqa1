@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut, UserPlus, Shield } from 'lucide-react';
+import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut, UserPlus, Shield, Settings, Menu, X } from 'lucide-react';
 
 export default function AdminLayout({
     children,
@@ -11,8 +11,8 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
-
     const [user, setUser] = useState<any>(null);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -21,33 +21,33 @@ export default function AdminLayout({
         }
     }, []);
 
+    // Close mobile menu when path changes
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
+
     const allNavItems = [
-        { name: 'الرئيسية', href: '/admin/dashboard', icon: LayoutDashboard, permission: 'dashboard' }, // Always allowed basically
+        { name: 'الرئيسية', href: '/admin/dashboard', icon: LayoutDashboard, permission: 'dashboard' },
         { name: 'إصدار الأكواد', href: '/admin/generate', icon: Wand2, permission: 'generate' },
         { name: 'طباعة الكروت', href: '/admin/print', icon: Home, permission: 'print' },
         { name: 'إدخال يدوي', href: '/admin/manual-entry', icon: UserPlus, permission: 'manual_entry' },
         { name: 'المشتركين', href: '/admin/participants', icon: Users, permission: 'participants' },
         { name: 'السحب', href: '/admin/winner', icon: Trophy, permission: 'winner' },
-        { name: 'الموظفين', href: '/admin/users', icon: Shield, permission: 'users' }, // New
+        { name: 'الموظفين', href: '/admin/users', icon: Shield, permission: 'users' },
     ];
 
     const navItems = allNavItems.filter(item => {
         if (!user) return false;
         if (user.role === 'superadmin') return true;
-
-        // Dashboard is usually allowed, or check permission
         if (item.permission === 'dashboard') return true;
-
-        // "Users" page is strictly Super Admin only
         if (item.permission === 'users') return false;
-
         return user.permissions.includes(item.permission);
     });
 
     const handleLogout = async () => {
         try {
             await fetch('/api/admin/logout', { method: 'POST' });
-            localStorage.removeItem('user'); // Clear client storage
+            localStorage.removeItem('user');
             window.location.href = '/admin/login';
         } catch (error) {
             console.error('Logout failed', error);
@@ -55,15 +55,36 @@ export default function AdminLayout({
     };
 
     return (
-        <div className="min-h-screen flex flex-col md:flex-row">
+        <div className="min-h-screen flex bg-gray-50 overflow-hidden">
+
+            {/* Mobile Toggle Button */}
+            <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden fixed top-4 left-4 z-50 bg-[#D4AF37] text-[#003318] p-2 rounded-full shadow-lg hover:bg-[#b5952f] transition"
+            >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Settings className="w-6 h-6" />}
+            </button>
+
+            {/* Overlay for Mobile */}
+            {isMobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-full md:w-64 bg-[#003318] text-white p-6 flex flex-col shrink-0">
+            <aside className={`
+                fixed inset-y-0 right-0 z-50 w-64 bg-[#003318] text-white p-6 flex flex-col shadow-2xl transition-transform duration-300 ease-in-out
+                md:relative md:translate-x-0 md:shadow-none
+                ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
+            `}>
                 <div className="flex items-center gap-3 mb-10">
                     <Trophy className="text-[#D4AF37] w-8 h-8" />
                     <span className="text-xl font-bold">تاج النقاء</span>
                 </div>
 
-                <nav className="flex-1 space-y-2">
+                <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar">
                     {navItems.map((item) => {
                         const Icon = item.icon;
                         const isActive = pathname === item.href;
@@ -98,7 +119,7 @@ export default function AdminLayout({
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-6 md:p-10 overflow-auto">
+            <main className="flex-1 p-6 md:p-10 overflow-auto w-full h-screen">
                 {children}
             </main>
         </div >

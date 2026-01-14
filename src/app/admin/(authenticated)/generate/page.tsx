@@ -57,7 +57,7 @@ export default function GenerateCodes() {
                             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none bg-white"
                         >
                             <option value="FG">منتج صغير (FG - فرصة واحدة)</option>
-                            <option value="FX">منتج كبير (FX - فرصتين)</option>
+                            <option value="FX">منتج كبير (FX - 3 فرص)</option>
                         </select>
                     </div>
 
