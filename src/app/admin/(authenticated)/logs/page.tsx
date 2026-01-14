@@ -77,9 +77,9 @@ export default function LogsPage() {
                                         <td className="p-4 font-bold text-gray-800">{log.admin_username}</td>
                                         <td className="p-4">
                                             <span className={`px-2 py-1 rounded text-xs font-bold ${log.action === 'LOGIN' ? 'bg-blue-100 text-blue-700' :
-                                                    log.action === 'DELETE' ? 'bg-red-100 text-red-700' :
-                                                        log.action === 'SYSTEM_RESET' ? 'bg-red-200 text-red-800' :
-                                                            'bg-gray-100 text-gray-700'
+                                                log.action === 'DELETE' ? 'bg-red-100 text-red-700' :
+                                                    log.action === 'SYSTEM_RESET' ? 'bg-red-200 text-red-800' :
+                                                        'bg-gray-100 text-gray-700'
                                                 }`}>
                                                 {log.action}
                                             </span>
@@ -87,7 +87,7 @@ export default function LogsPage() {
                                         <td className="p-4 text-gray-600 text-sm">{log.details}</td>
                                         <td className="p-4 text-gray-500 text-sm font-mono dir-ltr flex items-center gap-2">
                                             <Clock className="w-3 h-3" />
-                                            {new Date(log.created_at).toLocaleString('en-GB')}
+                                            {new Date(log.created_at).toLocaleString('en-GB', { hour12: true })}
                                         </td>
                                     </tr>
                                 ))}
