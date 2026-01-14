@@ -92,6 +92,15 @@ export default function AdminLogin() {
                         {isLoading ? 'جاري الدخول...' : 'تسجيل الدخول'}
                     </button>
                 </form>
+
+                <div className="mt-6 pt-4 border-t border-gray-100 text-center">
+                    <p className="text-gray-400 text-xs text-[#004D25]/60 mb-1">
+                        &copy; {new Date().getFullYear()} مؤسسة تاج النقاء
+                    </p>
+                    <p className="text-gray-400 text-[10px]">
+                        تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors">جلامور ديزاين</a>
+                    </p>
+                </div>
             </div>
         </div>
     );

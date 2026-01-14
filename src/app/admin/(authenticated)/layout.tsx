@@ -63,12 +63,19 @@ export default function AdminLayout({
                     <LogOut className="w-5 h-5" />
                     <span>تسجيل خروج</span>
                 </button>
+
+                <div className="mt-8 pt-4 border-t border-[#D4AF37]/20 text-center text-xs text-gray-400">
+                    <p className="mb-1">&copy; {new Date().getFullYear()} تاج النقاء</p>
+                    <p className="text-[10px]">
+                        تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors">جلامور ديزاين</a>
+                    </p>
+                </div>
             </aside>
 
             {/* Main Content */}
             <main className="flex-1 p-6 md:p-10 overflow-auto">
                 {children}
             </main>
-        </div>
+        </div >
     );
 }

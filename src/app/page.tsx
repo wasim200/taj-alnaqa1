@@ -189,6 +189,9 @@ export default function Home() {
           <p className="text-gray-400 text-sm">
             &copy; {new Date().getFullYear()} مؤسسة تاج النقاء. جميع الحقوق محفوظة.
           </p>
+          <p className="text-gray-400 text-xs mt-2">
+            تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors">جلامور ديزاين</a>
+          </p>
         </div>
 
       </div>
