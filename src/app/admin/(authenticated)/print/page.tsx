@@ -47,23 +47,23 @@ function StickerCard({ code }: StickerCardProps) {
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '10mm 5mm 5mm 5mm', // Reduced padding
+                padding: '14mm 4mm 5mm 4mm', // Adjusted padding to clear tip and sides
             }}
         >
-            <div className="flex flex-col items-center justify-between h-full w-full max-w-[95%] mx-auto pt-2">
+            <div className="flex flex-col items-center justify-between h-full w-full max-w-[95%] mx-auto pt-1">
                 {/* 1. Header */}
                 <div className="mb-0.5">
-                    <h3 style={{ color: themeColor }} className="font-extrabold text-[9px] leading-tight">
+                    <h3 style={{ color: themeColor }} className="font-extrabold text-[8px] leading-tight">
                         كن أنت الفائز مع
                     </h3>
-                    <h3 style={{ color: themeColor }} className="font-extrabold text-[9px] leading-tight">
+                    <h3 style={{ color: themeColor }} className="font-extrabold text-[8px] leading-tight">
                         تاج النقاء للمنظفات
                     </h3>
                 </div>
 
                 {/* 2. Code */}
                 <div className="my-0.5 w-full flex justify-center">
-                    <span className="bg-gray-200 px-3 py-0.5 rounded-md text-[10px] font-mono font-black tracking-widest text-black shadow-inner border border-gray-300 block">
+                    <span className="bg-gray-200 px-3 py-0.5 rounded-md text-[9px] font-mono font-black tracking-widest text-black shadow-inner border border-gray-300 block">
                         {code}
                     </span>
                 </div>
@@ -84,7 +84,7 @@ function StickerCard({ code }: StickerCardProps) {
 
                 {/* 4. QR Code */}
                 <div className="">
-                    <QRCode value={`https://taj-alnaqa.vercel.app`} size={45} color={themeColor} />
+                    <QRCode value={`https://taj-alnaqa.vercel.app`} size={42} color={themeColor} />
                 </div>
 
                 {/* 5. Footer */}
@@ -186,7 +186,7 @@ export default function PrintPage() {
 
             {/* Print Area */}
             <div
-                className="grid gap-0 mx-auto print:mx-0 print:w-full"
+                className="grid gap-1 mx-auto print:mx-0 print:w-full"
                 style={{
                     gridTemplateColumns: `repeat(${cols}, 1fr)`,
                     width: '100%'
@@ -217,6 +217,7 @@ export default function PrintPage() {
                     .grid {
                         display: grid !important;
                         grid-template-columns: repeat(4, 1fr) !important;
+                        gap: 1mm !important;
                     }
                 }
             `}</style>
