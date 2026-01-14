@@ -39,7 +39,7 @@ function StickerCard({ code }: StickerCardProps) {
         <div
             className="flex flex-col items-center justify-center text-center relative break-inside-avoid"
             style={{
-                height: '58mm', // Exact height for 5 rows on A4 (297mm / 5 = ~59.4, safe margin 58)
+                height: '55mm', // Exact height for 5 rows on A4 (297 - 10 margin - 12 gaps = 275 / 5 = 55)
                 width: '100%',
                 fontSize: '8px',
                 // Using SVG background for the exact droplet shape and border
@@ -47,7 +47,7 @@ function StickerCard({ code }: StickerCardProps) {
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '14mm 4mm 5mm 4mm', // Adjusted padding to clear tip and sides
+                padding: '13mm 4mm 5mm 4mm', // Adjusted padding to clear tip and sides
             }}
         >
             <div className="flex flex-col items-center justify-between h-full w-full max-w-[95%] mx-auto pt-1">
@@ -217,7 +217,7 @@ export default function PrintPage() {
                     .grid {
                         display: grid !important;
                         grid-template-columns: repeat(4, 1fr) !important;
-                        gap: 1mm !important;
+                        gap: 3mm !important;
                     }
                 }
             `}</style>
