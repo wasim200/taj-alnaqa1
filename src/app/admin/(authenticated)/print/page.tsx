@@ -76,7 +76,7 @@ function StickerCard({ code }: StickerCardProps) {
                     <p className="text-[7px] font-bold leading-tight" style={{ color: 'black' }}>
                         والاسم عبر الواتساب للرقم:
                     </p>
-                    <p className="text-[8px] dir-ltr font-black mt-0.5" style={{ color: 'black' }}>
+                    <p className="text-[8px] font-black mt-0.5" dir="ltr" style={{ color: 'black' }}>
                         +967 774987789
                     </p>
                 </div>
