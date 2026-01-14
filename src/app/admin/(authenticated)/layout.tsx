@@ -67,7 +67,7 @@ export default function AdminLayout({
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className="text-white hover:text-[#D4AF37] p-2 transition rounded-full hover:bg-white/10"
                 >
-                    {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Settings className="w-6 h-6" />}
+                    {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                 </button>
             </header>
 
