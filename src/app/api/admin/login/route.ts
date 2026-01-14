@@ -14,12 +14,14 @@ export async function POST(req: Request) {
         const user = await User.findOne({ username });
 
         if (!user) {
+            await logActivity(username, 'LOGIN_FAILED', 'محاولة دخول فاشلة: اسم المستخدم غير موجود');
             return NextResponse.json({ success: false, message: 'بيانات الدخول غير صحيحة' }, { status: 401 });
         }
 
         // Verify password (Direct comparison for now as requested)
         // In a real app, use bcrypt.compare(password, user.password_hash)
         if (password !== user.password_hash) {
+            await logActivity(username, 'LOGIN_FAILED', 'محاولة دخول فاشلة: كلمة المرور غير صحيحة');
             return NextResponse.json({ success: false, message: 'بيانات الدخول غير صحيحة' }, { status: 401 });
         }
 
