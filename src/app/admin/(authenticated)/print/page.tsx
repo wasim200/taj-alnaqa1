@@ -47,12 +47,12 @@ function StickerCard({ code }: StickerCardProps) {
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '22mm 5mm 15mm 5mm', // Padding to push content down from the point
+                padding: '12mm 5mm 5mm 5mm', // Padding to push content down from the point
             }}
         >
             <div className="flex flex-col items-center justify-between h-full w-full max-w-[90%] mx-auto pt-4">
                 {/* 1. Header */}
-                <div className="mb-1">
+                <div className="mb-0.5">
                     <h3 style={{ color: themeColor }} className="font-extrabold text-[10px] leading-tight">
                         كن أنت الفائز مع
                     </h3>
@@ -62,7 +62,7 @@ function StickerCard({ code }: StickerCardProps) {
                 </div>
 
                 {/* 2. Code */}
-                <div className="my-1 w-full flex justify-center">
+                <div className="my-0.5 w-full flex justify-center">
                     <span className="bg-gray-200 px-4 py-1 rounded-lg text-sm font-mono font-black tracking-widest text-black shadow-inner border border-gray-300 block">
                         {code}
                     </span>
