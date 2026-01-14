@@ -123,7 +123,7 @@ export default function Home() {
                 value={phone}
                 onChange={handlePhoneChange}
                 className="w-full p-4 pl-4 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:border-[#D4AF37] focus:ring-4 focus:ring-[#D4AF37]/10 transition bg-white text-gray-800 text-left font-mono tracking-widest"
-                placeholder="771234567"
+                placeholder="7xxxxxxxx"
                 dir="ltr"
                 required
               />
