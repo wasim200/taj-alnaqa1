@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut } from 'lucide-react';
+import { Home, LayoutDashboard, Users, Trophy, Wand2, LogOut, UserPlus } from 'lucide-react';
 
 export default function AdminLayout({
     children,
@@ -14,7 +14,8 @@ export default function AdminLayout({
     const navItems = [
         { name: 'الرئيسية', href: '/admin/dashboard', icon: LayoutDashboard },
         { name: 'إصدار الأكواد', href: '/admin/generate', icon: Wand2 },
-        { name: 'طباعة الكروت', href: '/admin/print', icon: Home }, // Using Home icon as placeholder or Printer
+        { name: 'طباعة الكروت', href: '/admin/print', icon: Home },
+        { name: 'إدخال يدوي', href: '/admin/manual-entry', icon: UserPlus }, // New Feature
         { name: 'المشتركين', href: '/admin/participants', icon: Users },
         { name: 'السحب', href: '/admin/winner', icon: Trophy },
     ];
