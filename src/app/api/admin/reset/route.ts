@@ -12,7 +12,8 @@ export async function DELETE(req: Request) {
         await Participant.deleteMany({});
 
         const adminUsername = req.headers.get('x-admin-username') || 'Unknown';
-        await logActivity(adminUsername, 'SYSTEM_RESET', 'قام بتهيئة النظام وحذف جميع البيانات');
+        const ip = req.headers.get('x-forwarded-for') || 'Unknown';
+        await logActivity(adminUsername, 'SYSTEM_RESET', 'قام بتهيئة النظام وحذف جميع البيانات', ip);
 
         return NextResponse.json({
             success: true,

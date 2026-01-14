@@ -37,7 +37,8 @@ export async function POST(req: Request) {
         });
 
         // Log the login action
-        await logActivity(user.username, 'LOGIN', 'تم تسجيل الدخول بنجاح');
+        const ip = req.headers.get('x-forwarded-for') || 'Unknown';
+        await logActivity(user.username, 'LOGIN', 'تم تسجيل الدخول بنجاح', ip);
 
         // Set Cookie
         response.cookies.set('admin_token', 'secure-token-value', {

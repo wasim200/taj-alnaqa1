@@ -16,7 +16,8 @@ export async function GET(req: Request) {
         const winner = await Participant.findOne().skip(random);
 
         const adminUsername = req.headers.get('x-admin-username') || 'Unknown';
-        await logActivity(adminUsername, 'DRAW_WINNER', `تم إجراء السحب وفاز: ${winner.name} (${winner.phone})`);
+        const ip = req.headers.get('x-forwarded-for') || 'Unknown';
+        await logActivity(adminUsername, 'DRAW_WINNER', `تم إجراء السحب وفاز: ${winner.name} (${winner.phone})`, ip);
 
         return NextResponse.json({
             success: true,

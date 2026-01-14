@@ -65,7 +65,7 @@ export default function LogsPage() {
                         <table className="w-full text-right">
                             <thead className="bg-[#004D25]/5 text-[#004D25]">
                                 <tr>
-                                    <th className="p-4 font-bold">المستخدم</th>
+                                    <th className="p-4 font-bold">المستخدم (IP)</th>
                                     <th className="p-4 font-bold">العملية</th>
                                     <th className="p-4 font-bold">التفاصيل</th>
                                     <th className="p-4 font-bold">التوقيت</th>
@@ -74,7 +74,10 @@ export default function LogsPage() {
                             <tbody className="divide-y divide-gray-100">
                                 {filteredLogs.map(log => (
                                     <tr key={log._id} className="hover:bg-gray-50 transition">
-                                        <td className="p-4 font-bold text-gray-800">{log.admin_username}</td>
+                                        <td className="p-4 font-bold text-gray-800">
+                                            <div>{log.admin_username}</div>
+                                            <div className="text-xs text-gray-400 font-mono mt-1">{log.ip_address || 'N/A'}</div>
+                                        </td>
                                         <td className="p-4">
                                             <span className={`px-2 py-1 rounded text-xs font-bold ${log.action === 'LOGIN' ? 'bg-blue-100 text-blue-700' :
                                                 log.action === 'DELETE' ? 'bg-red-100 text-red-700' :

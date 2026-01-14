@@ -63,7 +63,8 @@ export async function POST(req: Request) {
 
         // Log the activity
         const adminUsername = req.headers.get('x-admin-username') || 'Unknown';
-        await logActivity(adminUsername, 'GENERATE_CODES', `تم توليد ${insertedCount} كود (${validPrefix}) - دفعة: ${batch_name}`);
+        const ip = req.headers.get('x-forwarded-for') || 'Unknown';
+        await logActivity(adminUsername, 'GENERATE_CODES', `تم توليد ${insertedCount} كود (${validPrefix}) - دفعة: ${batch_name}`, ip);
 
         return NextResponse.json({
             success: true,
