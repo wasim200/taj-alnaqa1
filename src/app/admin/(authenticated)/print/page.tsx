@@ -47,10 +47,10 @@ function StickerCard({ code }: StickerCardProps) {
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '25mm 5mm 15mm 5mm', // Padding to push content down from the point
+                padding: '22mm 5mm 15mm 5mm', // Padding to push content down from the point
             }}
         >
-            <div className="flex flex-col items-center justify-between h-full w-full max-w-[80%] mx-auto pt-4">
+            <div className="flex flex-col items-center justify-between h-full w-full max-w-[90%] mx-auto pt-4">
                 {/* 1. Header */}
                 <div className="mb-1">
                     <h3 style={{ color: themeColor }} className="font-extrabold text-[10px] leading-tight">
@@ -69,13 +69,15 @@ function StickerCard({ code }: StickerCardProps) {
                 </div>
 
                 {/* 3. Scratch Instruction */}
-                <div className="mb-1">
+                <div className="mb-0.5">
                     <p className="text-[7px] font-bold leading-tight" style={{ color: 'black' }}>
                         لدخولك السحب اخدش وارسل الرمز
                     </p>
-                    <p className="text-[7px] font-bold leading-tight flex items-center justify-center gap-1" style={{ color: 'black' }}>
-                        <span>والاسم عبر الواتساب للرقم</span>
-                        <span className="text-[8px] dir-ltr inline-block">+967 774987789</span>
+                    <p className="text-[7px] font-bold leading-tight" style={{ color: 'black' }}>
+                        والاسم عبر الواتساب للرقم:
+                    </p>
+                    <p className="text-[8px] dir-ltr font-black mt-0.5" style={{ color: 'black' }}>
+                        +967 774987789
                     </p>
                 </div>
 
