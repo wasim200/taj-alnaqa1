@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         // 3. Register Participant
         // Logic: FX -> 2 Chances, FG -> 1 Chance
         const isDoubleChance = code.startsWith('FX');
-        const entries = isDoubleChance ? 2 : 1;
+        const entries = isDoubleChance ? 3 : 1;
         const participantIds = [];
 
         // Admin Manual Entry - Metadata
