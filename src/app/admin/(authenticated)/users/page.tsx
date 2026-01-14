@@ -8,6 +8,9 @@ export default function UsersPage() {
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -42,6 +45,25 @@ export default function UsersPage() {
         fetchUsers();
     }, []);
 
+    const resetForm = () => {
+        setFormData({ username: '', password: '', role: 'employee', permissions: [] });
+        setEditMode(false);
+        setEditingId(null);
+        setShowForm(false);
+    };
+
+    const handleEdit = (user: any) => {
+        setFormData({
+            username: user.username,
+            password: '', // Keep empty to indicate no change unless typed
+            role: user.role,
+            permissions: user.permissions
+        });
+        setEditingId(user._id);
+        setEditMode(true);
+        setShowForm(true);
+    };
+
     const handleDelete = async (id: string, username: string) => {
         const result = await Swal.fire({
             title: 'هل أنت متأكد؟',
@@ -73,20 +95,28 @@ export default function UsersPage() {
         }
     };
 
-    const handleCreate = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const url = '/api/admin/users';
+        const method = editMode ? 'PUT' : 'POST';
+        const body = editMode ? { ...formData, id: editingId } : formData;
+
         try {
-            const res = await fetch('/api/admin/users', {
-                method: 'POST',
+            const res = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(body)
             });
             const data = await res.json();
 
             if (data.success) {
-                Swal.fire('تم الإضافة!', 'تم إضافة الموظف بنجاح.', 'success');
-                setShowForm(false);
-                setFormData({ username: '', password: '', role: 'employee', permissions: [] });
+                Swal.fire(
+                    editMode ? 'تم التعديل!' : 'تم الإضافة!',
+                    editMode ? 'تم تعديل بيانات الموظف بنجاح.' : 'تم إضافة الموظف بنجاح.',
+                    'success'
+                );
+                resetForm();
                 fetchUsers();
             } else {
                 Swal.fire('خطأ!', data.message, 'error');
@@ -113,41 +143,48 @@ export default function UsersPage() {
                         <Users className="w-8 h-8 text-[#D4AF37]" />
                         إدارة الموظفين
                     </h1>
-                    <p className="text-gray-500">إضافة حسابات الموظفين وتحديد صلاحياتهم</p>
+                    <p className="text-gray-500">إضافة وتعديل حسابات الموظفين وصلاحياتهم</p>
                 </div>
                 <button
-                    onClick={() => setShowForm(!showForm)}
+                    onClick={() => {
+                        if (showForm) resetForm();
+                        else setShowForm(true);
+                    }}
                     className="bg-[#004D25] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#003318] transition flex items-center gap-2"
                 >
                     <UserPlus className="w-5 h-5" />
-                    {showForm ? 'إلغاء' : 'إضافة موظف جديد'}
+                    {showForm ? 'إغلاق' : 'إضافة موظف جديد'}
                 </button>
             </header>
 
-            {/* Create Form */}
+            {/* Create/Edit Form */}
             {showForm && (
                 <div className="glass-card p-8 mb-8 animate-scaleIn bg-white rounded-2xl shadow-lg border border-gray-100">
                     <h3 className="text-xl font-bold text-[#004D25] mb-6 flex items-center gap-2">
-                        <UserPlus className="w-6 h-6" />
-                        بيانات الموظف الجديد
+                        {editMode ? <Key className="w-6 h-6" /> : <UserPlus className="w-6 h-6" />}
+                        {editMode ? 'تعديل بيانات الموظف' : 'بيانات الموظف الجديد'}
                     </h3>
-                    <form onSubmit={handleCreate} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-gray-700 font-bold mb-2">اسم المستخدم</label>
                                 <input
                                     type="text"
                                     required
-                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none"
+                                    disabled={editMode} // Prevent username edit
+                                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none ${editMode ? 'bg-gray-100' : ''}`}
                                     value={formData.username}
                                     onChange={e => setFormData({ ...formData, username: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-bold mb-2">كلمة المرور</label>
+                                <label className="block text-gray-700 font-bold mb-2">
+                                    كلمة المرور
+                                    {editMode && <span className="text-xs text-gray-400 font-normal mr-2">(اتركها فارغة إذا لم تود تغييرها)</span>}
+                                </label>
                                 <input
-                                    type="password"
-                                    required
+                                    type="password" // Allow password update
+                                    required={!editMode}
                                     className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none"
                                     value={formData.password}
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
@@ -178,7 +215,7 @@ export default function UsersPage() {
                         <div className="flex justify-end gap-4 pt-4 border-t">
                             <button
                                 type="button"
-                                onClick={() => setShowForm(false)}
+                                onClick={resetForm}
                                 className="px-6 py-2 text-gray-500 hover:bg-gray-100 rounded-lg transition"
                             >
                                 إلغاء
@@ -187,7 +224,7 @@ export default function UsersPage() {
                                 type="submit"
                                 className="bg-[#D4AF37] text-white px-8 py-2 rounded-lg font-bold hover:bg-[#B5952F] transition shadow-md"
                             >
-                                حفظ المستخدم
+                                {editMode ? 'حفظ التعديلات' : 'حفظ المستخدم'}
                             </button>
                         </div>
                     </form>
@@ -246,15 +283,25 @@ export default function UsersPage() {
                                         {new Date(user.created_at).toLocaleDateString('en-GB')}
                                     </td>
                                     <td className="p-4 text-center">
-                                        {user.username !== 'admin' && ( // Prevent deleting main admin
+                                        <div className="flex justify-center gap-2">
                                             <button
-                                                onClick={() => handleDelete(user._id, user.username)}
-                                                className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition"
-                                                title="حذف"
+                                                onClick={() => handleEdit(user)}
+                                                className="text-blue-400 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-full transition"
+                                                title="تعديل"
                                             >
-                                                <Trash2 className="w-5 h-5" />
+                                                <Key className="w-5 h-5" />
                                             </button>
-                                        )}
+
+                                            {user.username !== 'admin' && ( // Prevent deleting main admin
+                                                <button
+                                                    onClick={() => handleDelete(user._id, user.username)}
+                                                    className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition"
+                                                    title="حذف"
+                                                >
+                                                    <Trash2 className="w-5 h-5" />
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
