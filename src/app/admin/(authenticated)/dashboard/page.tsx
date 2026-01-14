@@ -51,7 +51,10 @@ export default function Dashboard() {
 
         if (result.isConfirmed) {
             try {
-                const res = await fetch('/api/admin/reset', { method: 'DELETE' });
+                const res = await fetch('/api/admin/reset', {
+                    method: 'DELETE',
+                    headers: { 'x-admin-username': user?.username || 'Unknown' }
+                });
                 const data = await res.json();
 
                 if (data.success) {

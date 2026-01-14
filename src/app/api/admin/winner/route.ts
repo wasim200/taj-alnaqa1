@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { Participant } from '@/models/Schema';
+import { logActivity } from '@/lib/log-activity';
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
         await dbConnect();
         const count = await Participant.countDocuments();
@@ -13,6 +14,9 @@ export async function GET() {
 
         const random = Math.floor(Math.random() * count);
         const winner = await Participant.findOne().skip(random);
+
+        const adminUsername = req.headers.get('x-admin-username') || 'Unknown';
+        await logActivity(adminUsername, 'DRAW_WINNER', `تم إجراء السحب وفاز: ${winner.name} (${winner.phone})`);
 
         return NextResponse.json({
             success: true,

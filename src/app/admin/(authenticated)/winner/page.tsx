@@ -18,7 +18,10 @@ export default function WinnerPage() {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         try {
-            const res = await fetch('/api/admin/winner');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const res = await fetch('/api/admin/winner', {
+                headers: { 'x-admin-username': user.username || 'Unknown' }
+            });
             const data = await res.json();
 
             if (data.success) {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { Code } from '@/models/Schema';
+import { logActivity } from '@/lib/log-activity';
 import { randomBytes } from 'crypto';
 
 function generateRandomCode(prefix: string) {
@@ -59,6 +60,10 @@ export async function POST(req: Request) {
                 }
             }
         }
+
+        // Log the activity
+        const adminUsername = req.headers.get('x-admin-username') || 'Unknown';
+        await logActivity(adminUsername, 'GENERATE_CODES', `تم توليد ${insertedCount} كود (${validPrefix}) - دفعة: ${batch_name}`);
 
         return NextResponse.json({
             success: true,

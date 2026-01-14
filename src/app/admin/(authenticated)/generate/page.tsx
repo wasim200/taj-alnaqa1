@@ -15,9 +15,13 @@ export default function GenerateCodes() {
         setIsLoading(true);
 
         try {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
             const res = await fetch('/api/admin/generate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-admin-username': user.username || 'Unknown'
+                },
                 body: JSON.stringify({ batch_name: batchName, quantity, prefix })
             });
             const data = await res.json();
