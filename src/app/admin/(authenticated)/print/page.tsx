@@ -89,7 +89,7 @@ function StickerCard({ code }: StickerCardProps) {
 
                 {/* 5. Footer */}
                 <p className="text-[5px] font-bold mt-0.5" style={{ color: 'black' }}>
-                    للتسجيل التلقائي امسح الباركود
+                    للتحويل التلقائي امسح QR
                 </p>
             </div>
         </div>
