@@ -92,7 +92,7 @@ export default function Home() {
             <Crown className="w-10 h-10 text-[#D4AF37]" />
             <span>تاج النقاء</span>
           </h1>
-          <p className="text-gray-500 text-lg font-medium">سجل كود المنتجات الكبيرة أو الصغيرة وادخل السحب!</p>
+          <p className="text-gray-500 text-lg font-medium">دائما أنت الرابح!</p>
         </div>
 
         {/* Form */}
