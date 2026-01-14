@@ -11,6 +11,9 @@ const tajawal = Tajawal({
 export const metadata: Metadata = {
   title: "تاج النقاء | مسابقة الربح",
   description: "نظام كروت الخدش والسحوبات - تاج النقاء",
+  verification: {
+    google: "xHz13EhWwNfrfH8jXflNReBWjtL6NbCfVgXHEb94v_w",
+  },
 };
 
 export default function RootLayout({
