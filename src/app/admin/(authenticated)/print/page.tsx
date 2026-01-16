@@ -297,131 +297,222 @@ export default function PrintPage() {
             if (btn) btn.innerText = originalText;
         }
     };
-    const step = 100;
-    const newStart = printRange.end + 1;
-    const newEnd = Math.min(codes.length, newStart + step - 1);
-    if (newStart <= codes.length) {
-        setPrintRange({ start: newStart, end: newEnd });
-    }
-};
 
-const handlePrevPage = () => {
-    const step = 100;
-    const newStart = Math.max(1, printRange.start - step);
-    const newEnd = newStart + step - 1;
-    setPrintRange({ start: newStart, end: newEnd });
-};
+    const handleDownloadFullPDF = async () => {
+        if (!codes.length) return;
 
-return (
-    <div className="flex flex-col min-h-screen">
-        {/* Controls - Hidden during print */}
-        <header className="print:hidden bg-white p-6 shadow-sm mb-6 rounded-lg animate-fadeInUp">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-[#004D25] flex items-center gap-2">
-                        <Printer className="w-6 h-6" />
-                        طباعة الكروت
-                    </h1>
-                    <p className="text-gray-500 text-sm mt-1">
-                        تم تحديد <b>200</b> كرت في كل دفعة طباعة لتجنب التعليق.
-                    </p>
-                </div>
+        const btn = document.getElementById('btn-download-full-pdf');
+        const originalText = btn ? btn.innerText : 'تحميل الكل (PDF)';
+        if (btn) btn.innerText = 'جاري التحضير...';
 
-                <div className="flex flex-wrap items-end gap-3 w-full md:w-auto">
-                    <div className="flex-1 min-w-[150px]">
-                        <label className="block text-xs font-bold text-gray-500 mb-1">اختر الدفعة</label>
-                        <select
-                            className="w-full p-2 border rounded-lg text-sm"
-                            value={selectedBatch}
-                            onChange={(e) => setSelectedBatch(e.target.value)}
+        try {
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const chunkSize = 20; // 4 cols * 5 rows = 20 items per page (fits well on A4)
+            const totalChunks = Math.ceil(codes.length / chunkSize);
+
+            // Create a dedicated container for rendering
+            const container = document.createElement('div');
+            container.style.position = 'absolute';
+            container.style.left = '-9999px';
+            container.style.top = '0';
+            container.style.width = '210mm'; // Set to A4 width
+            container.style.backgroundColor = 'white';
+            document.body.appendChild(container);
+
+            for (let i = 0; i < totalChunks; i++) {
+                if (btn) btn.innerText = `جاري المعالجة ${i + 1} / ${totalChunks}`;
+
+                const start = i * chunkSize;
+                const end = start + chunkSize;
+                const chunk = codes.slice(start, end);
+
+                // Render Chunk
+                const root = createRoot(container);
+
+                // We wrap the render in a promise to wait for it
+                await new Promise<void>((resolve) => {
+                    root.render(
+                        <div
+                            className="grid"
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(4, 1fr)',
+                                gap: '1mm',
+                                width: '100%',
+                                padding: '5mm', // Margin simulating @page margin
+                                backgroundColor: 'white'
+                            }}
                         >
-                            <option value="">-- اختر --</option>
-                            {batches.map(b => <option key={b} value={b}>{b}</option>)}
-                        </select>
+                            {chunk.map((item, idx) => (
+                                <StickerCard key={item._id || idx} code={item.code} />
+                            ))}
+                        </div>
+                    );
+                    // Short timeout to ensure React flushes and paints
+                    setTimeout(resolve, 100);
+                });
+
+                // Capture
+                const canvas = await html2canvas(container, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+                if (i > 0) pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
+
+                // Cleanup current chunk
+                root.unmount();
+                // Brief pause to let UI breathe
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            // Remove container
+            document.body.removeChild(container);
+
+            // Save
+            pdf.save(`Full_Batch_${selectedBatch}_${codes.length}.pdf`);
+
+        } catch (err) {
+            console.error(err);
+            alert('حدث خطأ أثناء إنشاء الملف الكامل');
+        } finally {
+            if (btn) btn.innerText = originalText;
+        }
+    };
+
+    const handleNextPage = () => {
+        const step = 100;
+        const newStart = printRange.end + 1;
+        const newEnd = Math.min(codes.length, newStart + step - 1);
+        if (newStart <= codes.length) {
+            setPrintRange({ start: newStart, end: newEnd });
+        }
+    };
+
+    const handlePrevPage = () => {
+        const step = 100;
+        const newStart = Math.max(1, printRange.start - step);
+        const newEnd = newStart + step - 1;
+        setPrintRange({ start: newStart, end: newEnd });
+    };
+
+    return (
+        <div className="flex flex-col min-h-screen">
+            {/* Controls - Hidden during print */}
+            <header className="print:hidden bg-white p-6 shadow-sm mb-6 rounded-lg animate-fadeInUp">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h1 className="text-2xl font-bold text-[#004D25] flex items-center gap-2">
+                            <Printer className="w-6 h-6" />
+                            طباعة الكروت
+                        </h1>
+                        <p className="text-gray-500 text-sm mt-1">
+                            تم تحديد <b>200</b> كرت في كل دفعة طباعة لتجنب التعليق.
+                        </p>
                     </div>
 
-                    <button
-                        onClick={loadCodes}
-                        disabled={!selectedBatch || loadingCodes}
-                        className="bg-[#004D25] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#003318] disabled:opacity-50"
-                    >
-                        {loadingCodes ? 'جاري التحميل...' : 'جلب الأكواد'}
-                    </button>
-
-                    {/* Pagination Controls */}
-                    <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border">
-                        <button
-                            onClick={handlePrevPage}
-                            disabled={printRange.start <= 1}
-                            className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
-                        >
-                            السابق
-                        </button>
-
-                        <div className="flex items-center gap-2 text-xs font-bold font-mono">
-                            <span>{printRange.start}</span>
-                            <span>-</span>
-                            <span>{printRange.end}</span>
+                    <div className="flex flex-wrap items-end gap-3 w-full md:w-auto">
+                        <div className="flex-1 min-w-[150px]">
+                            <label className="block text-xs font-bold text-gray-500 mb-1">اختر الدفعة</label>
+                            <select
+                                className="w-full p-2 border rounded-lg text-sm"
+                                value={selectedBatch}
+                                onChange={(e) => setSelectedBatch(e.target.value)}
+                            >
+                                <option value="">-- اختر --</option>
+                                {batches.map(b => <option key={b} value={b}>{b}</option>)}
+                            </select>
                         </div>
 
                         <button
-                            onClick={handleNextPage}
-                            disabled={printRange.end >= codes.length}
-                            className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
+                            onClick={loadCodes}
+                            disabled={!selectedBatch || loadingCodes}
+                            className="bg-[#004D25] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#003318] disabled:opacity-50"
                         >
-                            التالي
+                            {loadingCodes ? 'جاري التحميل...' : 'جلب الأكواد'}
+                        </button>
+
+                        {/* Pagination Controls */}
+                        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border">
+                            <button
+                                onClick={handlePrevPage}
+                                disabled={printRange.start <= 1}
+                                className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
+                            >
+                                السابق
+                            </button>
+
+                            <div className="flex items-center gap-2 text-xs font-bold font-mono">
+                                <span>{printRange.start}</span>
+                                <span>-</span>
+                                <span>{printRange.end}</span>
+                            </div>
+
+                            <button
+                                onClick={handleNextPage}
+                                disabled={printRange.end >= codes.length}
+                                className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
+                            >
+                                التالي
+                            </button>
+                        </div>
+
+                        <button
+                            onClick={handlePrint}
+                            disabled={codes.length === 0}
+                            className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-[#AA8C2C] disabled:opacity-50"
+                        >
+                            طباعة ({Math.max(0, Math.min(codes.length, printRange.end) - printRange.start + 1)})
+                        </button>
+
+                        <button
+                            id="btn-download-pdf"
+                            onClick={handleDownloadPDF}
+                            disabled={codes.length === 0}
+                            className="bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-800 disabled:opacity-50 flex items-center gap-2"
+                        >
+                            <Download className="w-4 h-4" />
+                            تنزيل ملف (PDF)
+                        </button>
+
+                        <button
+                            onClick={handleDownloadCSV}
+                            disabled={codes.length === 0}
+                            className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-700 disabled:opacity-50"
+                        >
+                            ملف (CSV)
                         </button>
                     </div>
-
-                    <button
-                        onClick={handlePrint}
-                        disabled={codes.length === 0}
-                        className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-[#AA8C2C] disabled:opacity-50"
-                    >
-                        طباعة ({Math.max(0, Math.min(codes.length, printRange.end) - printRange.start + 1)})
-                    </button>
-
-                    <button
-                        id="btn-download-pdf"
-                        onClick={handleDownloadPDF}
-                        disabled={codes.length === 0}
-                        className="bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-800 disabled:opacity-50 flex items-center gap-2"
-                    >
-                        <Download className="w-4 h-4" />
-                        تنزيل ملف (PDF)
-                    </button>
-
-                    <button
-                        onClick={handleDownloadCSV}
-                        disabled={codes.length === 0}
-                        className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-700 disabled:opacity-50"
-                    >
-                        ملف (CSV)
-                    </button>
                 </div>
+            </header>
+
+            {/* Print Area */}
+            <div
+                className="grid gap-0.5 mx-auto print:mx-0 print:w-full bg-white"
+                style={{
+                    gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                    width: '100%'
+                }}
+            >
+                {codes.slice(printRange.start - 1, printRange.end).map((item, index) => (
+                    <StickerCard key={item._id || index} code={item.code} />
+                ))}
             </div>
-        </header>
 
-        {/* Print Area */}
-        <div
-            className="grid gap-0.5 mx-auto print:mx-0 print:w-full bg-white"
-            style={{
-                gridTemplateColumns: `repeat(${cols}, 1fr)`,
-                width: '100%'
-            }}
-        >
-            {codes.slice(printRange.start - 1, printRange.end).map((item, index) => (
-                <StickerCard key={item._id || index} code={item.code} />
-            ))}
-        </div>
+            {codes.length === 0 && !loadingCodes && (
+                <div className="text-center py-20 text-gray-400 print:hidden">
+                    الرجاء اختيار دفعة وجلب الأكواد
+                </div>
+            )}
 
-        {codes.length === 0 && !loadingCodes && (
-            <div className="text-center py-20 text-gray-400 print:hidden">
-                الرجاء اختيار دفعة وجلب الأكواد
-            </div>
-        )}
-
-        <style jsx global>{`
+            <style jsx global>{`
                 .sticker-card-bg {
                     height: 50mm;
                     width: 100%;
@@ -457,6 +548,6 @@ return (
                     }
                 }
             `}</style>
-    </div>
-);
+        </div>
+    );
 }
