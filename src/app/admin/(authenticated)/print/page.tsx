@@ -103,7 +103,7 @@ function StickerCard({ code }: StickerCardProps) {
 // --- Main Page ---
 
 export default function PrintPage() {
-    const [printRange, setPrintRange] = useState({ start: 1, end: 200 });
+    const [printRange, setPrintRange] = useState({ start: 1, end: 100 });
     const [loadingBatches, setLoadingBatches] = useState(true);
     const [loadingCodes, setLoadingCodes] = useState(false);
 
@@ -130,7 +130,7 @@ export default function PrintPage() {
             if (data.success) {
                 setCodes(data.codes);
                 // Reset range when loading new codes
-                setPrintRange({ start: 1, end: 200 });
+                setPrintRange({ start: 1, end: 100 });
             }
         } catch (e) {
             console.error(e);
@@ -143,8 +143,31 @@ export default function PrintPage() {
         window.print();
     };
 
+    const handleDownloadCSV = () => {
+        if (!codes.length) return;
+
+        // Create CSV content
+        const headers = ['Code', 'Batch', 'Created At'];
+        const rows = codes.map(c => [c.code, c.batch_name, new Date(c.created_at).toISOString()]);
+
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(r => r.join(','))
+        ].join('\n');
+
+        // Create Blob and Download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `codes_${selectedBatch}_all.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const handleNextPage = () => {
-        const step = 200;
+        const step = 100;
         const newStart = printRange.end + 1;
         const newEnd = Math.min(codes.length, newStart + step - 1);
         if (newStart <= codes.length) {
@@ -153,7 +176,7 @@ export default function PrintPage() {
     };
 
     const handlePrevPage = () => {
-        const step = 200;
+        const step = 100;
         const newStart = Math.max(1, printRange.start - step);
         const newEnd = newStart + step - 1;
         setPrintRange({ start: newStart, end: newEnd });
@@ -226,6 +249,14 @@ export default function PrintPage() {
                             className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-[#AA8C2C] disabled:opacity-50"
                         >
                             طباعة ({Math.max(0, Math.min(codes.length, printRange.end) - printRange.start + 1)})
+                        </button>
+
+                        <button
+                            onClick={handleDownloadCSV}
+                            disabled={codes.length === 0}
+                            className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-700 disabled:opacity-50"
+                        >
+                            ملف (CSV)
                         </button>
                     </div>
                 </div>
