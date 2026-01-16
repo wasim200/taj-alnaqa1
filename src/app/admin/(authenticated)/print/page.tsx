@@ -105,6 +105,9 @@ function StickerCard({ code }: StickerCardProps) {
 // --- Main Page ---
 
 export default function PrintPage() {
+    const [batches, setBatches] = useState<string[]>([]);
+    const [selectedBatch, setSelectedBatch] = useState('');
+    const [codes, setCodes] = useState<any[]>([]);
     const [printRange, setPrintRange] = useState({ start: 1, end: 100 });
     const [loadingBatches, setLoadingBatches] = useState(true);
     const [loadingCodes, setLoadingCodes] = useState(false);
@@ -166,6 +169,43 @@ export default function PrintPage() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+
+    const handleDownloadPDF = async () => {
+        const input = document.querySelector('.grid') as HTMLElement;
+        if (!input) return;
+
+        // Visual feedback
+        const btn = document.getElementById('btn-download-pdf');
+        if (btn) btn.innerText = 'جاري المعالجة...';
+
+        try {
+            const canvas = await html2canvas(input, { scale: 2 });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210; // A4 width in mm
+            const pageHeight = 297; // A4 height in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save(`codes_${selectedBatch}_${printRange.start}-${printRange.end}.pdf`);
+        } catch (err) {
+            console.error(err);
+            alert('حدث خطأ أثناء إنشاء ملف PDF');
+        } finally {
+            if (btn) btn.innerText = 'تنزيل ملف (PDF)';
+        }
     };
 
     const handleNextPage = () => {
@@ -251,6 +291,16 @@ export default function PrintPage() {
                             className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-[#AA8C2C] disabled:opacity-50"
                         >
                             طباعة ({Math.max(0, Math.min(codes.length, printRange.end) - printRange.start + 1)})
+                        </button>
+
+                        <button
+                            id="btn-download-pdf"
+                            onClick={handleDownloadPDF}
+                            disabled={codes.length === 0}
+                            className="bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-800 disabled:opacity-50 flex items-center gap-2"
+                        >
+                            <Download className="w-4 h-4" />
+                            تنزيل ملف (PDF)
                         </button>
 
                         <button
