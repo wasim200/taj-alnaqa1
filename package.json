@@ -12,6 +12,8 @@
     "@netlify/plugin-nextjs": "^5.15.4",
     "canvas-confetti": "^1.9.2",
     "dotenv": "^17.2.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.0.0",
     "lucide-react": "^0.562.0",
     "mongoose": "^9.1.2",
     "next": "16.1.1",

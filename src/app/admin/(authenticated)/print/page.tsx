@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import QRious from 'qrious';
-import { Printer } from 'lucide-react';
+import { Printer, Download } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // --- Components ---
 
