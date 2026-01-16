@@ -10,7 +10,6 @@ import html2canvas from 'html2canvas';
 // --- Components ---
 
 // Wrapper for QRious
-// Wrapper for QRious
 function QRCode({ value, size = 100, color = 'black' }: { value: string, size?: number, color?: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -290,98 +289,9 @@ export default function PrintPage() {
             // Save
             pdf.save(`Full_Batch_${selectedBatch}_${codes.length}.pdf`);
 
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            alert('حدث خطأ أثناء إنشاء الملف الكامل');
-        } finally {
-            if (btn) btn.innerText = originalText;
-        }
-    };
-
-    const handleDownloadFullPDF = async () => {
-        if (!codes.length) return;
-
-        const btn = document.getElementById('btn-download-full-pdf');
-        const originalText = btn ? btn.innerText : 'تحميل الكل (PDF)';
-        if (btn) btn.innerText = 'جاري التحضير...';
-
-        try {
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pageWidth = 210;
-            const pageHeight = 297;
-            const chunkSize = 20; // 4 cols * 5 rows = 20 items per page (fits well on A4)
-            const totalChunks = Math.ceil(codes.length / chunkSize);
-
-            // Create a dedicated container for rendering
-            const container = document.createElement('div');
-            container.style.position = 'absolute';
-            container.style.left = '-9999px';
-            container.style.top = '0';
-            container.style.width = '210mm'; // Set to A4 width
-            container.style.backgroundColor = 'white';
-            document.body.appendChild(container);
-
-            for (let i = 0; i < totalChunks; i++) {
-                if (btn) btn.innerText = `جاري المعالجة ${i + 1} / ${totalChunks}`;
-
-                const start = i * chunkSize;
-                const end = start + chunkSize;
-                const chunk = codes.slice(start, end);
-
-                // Render Chunk
-                const root = createRoot(container);
-
-                // We wrap the render in a promise to wait for it
-                await new Promise<void>((resolve) => {
-                    root.render(
-                        <div
-                            className="grid"
-                            style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(4, 1fr)',
-                                gap: '1mm',
-                                width: '100%',
-                                padding: '5mm', // Margin simulating @page margin
-                                backgroundColor: 'white'
-                            }}
-                        >
-                            {chunk.map((item, idx) => (
-                                <StickerCard key={item._id || idx} code={item.code} />
-                            ))}
-                        </div>
-                    );
-                    // Short timeout to ensure React flushes and paints
-                    setTimeout(resolve, 100);
-                });
-
-                // Capture
-                const canvas = await html2canvas(container, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false
-                });
-
-                const imgData = canvas.toDataURL('image/png');
-                const imgHeight = (canvas.height * pageWidth) / canvas.width;
-
-                if (i > 0) pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
-
-                // Cleanup current chunk
-                root.unmount();
-                // Brief pause to let UI breathe
-                await new Promise(r => setTimeout(r, 50));
-            }
-
-            // Remove container
-            document.body.removeChild(container);
-
-            // Save
-            pdf.save(`Full_Batch_${selectedBatch}_${codes.length}.pdf`);
-
-        } catch (err) {
-            console.error(err);
-            alert('حدث خطأ أثناء إنشاء الملف الكامل');
+            alert('حدث خطأ أثناء إنشاء الملف الكامل: ' + (err.message || err));
         } finally {
             if (btn) btn.innerText = originalText;
         }
@@ -480,6 +390,16 @@ export default function PrintPage() {
                         >
                             <Download className="w-4 h-4" />
                             تنزيل ملف (PDF)
+                        </button>
+
+                        <button
+                            id="btn-download-full-pdf"
+                            onClick={handleDownloadFullPDF}
+                            disabled={codes.length === 0}
+                            className="bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-800 disabled:opacity-50 flex items-center gap-2"
+                        >
+                            <FileDown className="w-4 h-4" />
+                            تحميل الكل (PDF)
                         </button>
 
                         <button
