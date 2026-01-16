@@ -39,7 +39,7 @@ function StickerCard({ code }: StickerCardProps) {
 
     return (
         <div
-            className="flex flex-col items-center justify-center text-center relative break-inside-avoid shadow-sm"
+            className="flex flex-col items-center justify-center text-center relative break-inside-avoid"
             style={{
                 height: '50mm',
                 width: '100%',
@@ -54,6 +54,7 @@ function StickerCard({ code }: StickerCardProps) {
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
                 padding: '12mm 4mm 4mm 4mm',
+                boxShadow: '0 1px 2px 0 rgba(0,0,0,0.05)'
             }}
         >
             <div className="flex flex-col items-center justify-between h-full w-full max-w-[90%] mx-auto pt-1">
@@ -69,7 +70,15 @@ function StickerCard({ code }: StickerCardProps) {
 
                 {/* 2. Code */}
                 <div className="my-0.5 w-full flex justify-center">
-                    <span className="bg-gray-200 px-3 py-0.5 rounded-md text-[8px] font-mono font-black tracking-widest text-black shadow-inner border border-gray-300 block">
+                    <span
+                        className="px-3 py-0.5 rounded-md text-[8px] font-mono font-black tracking-widest block"
+                        style={{
+                            backgroundColor: '#e5e7eb',
+                            color: '#000000',
+                            border: '1px solid #d1d5db',
+                            boxShadow: 'inset 0 2px 4px 0 rgba(0,0,0,0.06)'
+                        }}
+                    >
                         {code}
                     </span>
                 </div>
