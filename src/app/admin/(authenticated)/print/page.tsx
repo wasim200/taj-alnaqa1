@@ -127,7 +127,7 @@ export default function PrintPage() {
         if (!selectedBatch) return;
         setLoadingCodes(true);
         try {
-            const res = await fetch(`/api/admin/codes?batch=${encodeURIComponent(selectedBatch)}&limit=1000`);
+            const res = await fetch(`/api/admin/codes?batch=${encodeURIComponent(selectedBatch)}&limit=15000`);
             const data = await res.json();
             if (data.success) {
                 setCodes(data.codes);

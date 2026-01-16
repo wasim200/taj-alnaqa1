@@ -7,7 +7,7 @@ export async function GET(req: Request) {
         await dbConnect();
         const { searchParams } = new URL(req.url);
         const batch = searchParams.get('batch');
-        const limit = parseInt(searchParams.get('limit') || '100');
+        const limit = parseInt(searchParams.get('limit') || '15000');
 
         if (!batch) {
             return NextResponse.json({ success: false, message: 'Batch required' }, { status: 400 });
