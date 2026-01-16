@@ -103,10 +103,7 @@ function StickerCard({ code }: StickerCardProps) {
 // --- Main Page ---
 
 export default function PrintPage() {
-    const [batches, setBatches] = useState<string[]>([]);
-    const [selectedBatch, setSelectedBatch] = useState('');
-    const [codes, setCodes] = useState<any[]>([]);
-    const [printRange, setPrintRange] = useState({ start: 1, end: 1000 });
+    const [printRange, setPrintRange] = useState({ start: 1, end: 200 });
     const [loadingBatches, setLoadingBatches] = useState(true);
     const [loadingCodes, setLoadingCodes] = useState(false);
 
@@ -132,6 +129,8 @@ export default function PrintPage() {
             const data = await res.json();
             if (data.success) {
                 setCodes(data.codes);
+                // Reset range when loading new codes
+                setPrintRange({ start: 1, end: 200 });
             }
         } catch (e) {
             console.error(e);
@@ -144,6 +143,22 @@ export default function PrintPage() {
         window.print();
     };
 
+    const handleNextPage = () => {
+        const step = 200;
+        const newStart = printRange.end + 1;
+        const newEnd = Math.min(codes.length, newStart + step - 1);
+        if (newStart <= codes.length) {
+            setPrintRange({ start: newStart, end: newEnd });
+        }
+    };
+
+    const handlePrevPage = () => {
+        const step = 200;
+        const newStart = Math.max(1, printRange.start - step);
+        const newEnd = newStart + step - 1;
+        setPrintRange({ start: newStart, end: newEnd });
+    };
+
     return (
         <div className="flex flex-col min-h-screen">
             {/* Controls - Hidden during print */}
@@ -154,11 +169,13 @@ export default function PrintPage() {
                             <Printer className="w-6 h-6" />
                             طباعة الكروت
                         </h1>
-                        <p className="text-gray-500 text-sm mt-1">اختر الدفعة لطباعة أكواد الكروت (20 كرت في الصفحة)</p>
+                        <p className="text-gray-500 text-sm mt-1">
+                            تم تحديد <b>200</b> كرت في كل دفعة طباعة لتجنب التعليق.
+                        </p>
                     </div>
 
                     <div className="flex flex-wrap items-end gap-3 w-full md:w-auto">
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-[150px]">
                             <label className="block text-xs font-bold text-gray-500 mb-1">اختر الدفعة</label>
                             <select
                                 className="w-full p-2 border rounded-lg text-sm"
@@ -175,30 +192,32 @@ export default function PrintPage() {
                             disabled={!selectedBatch || loadingCodes}
                             className="bg-[#004D25] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#003318] disabled:opacity-50"
                         >
-                            {loadingCodes ? 'جاري التحميل...' : 'عرض'}
+                            {loadingCodes ? 'جاري التحميل...' : 'جلب الأكواد'}
                         </button>
 
-                        <div className="flex items-center gap-2">
-                            <div className="flex-1">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">من كرت #</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    value={printRange.start}
-                                    onChange={e => setPrintRange({ ...printRange, start: parseInt(e.target.value) })}
-                                    className="w-20 p-2 border rounded-lg text-sm text-center"
-                                />
+                        {/* Pagination Controls */}
+                        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border">
+                            <button
+                                onClick={handlePrevPage}
+                                disabled={printRange.start <= 1}
+                                className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
+                            >
+                                السابق
+                            </button>
+
+                            <div className="flex items-center gap-2 text-xs font-bold font-mono">
+                                <span>{printRange.start}</span>
+                                <span>-</span>
+                                <span>{printRange.end}</span>
                             </div>
-                            <div className="flex-1">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">إلى كرت #</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    value={printRange.end}
-                                    onChange={e => setPrintRange({ ...printRange, end: parseInt(e.target.value) })}
-                                    className="w-20 p-2 border rounded-lg text-sm text-center"
-                                />
-                            </div>
+
+                            <button
+                                onClick={handleNextPage}
+                                disabled={printRange.end >= codes.length}
+                                className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
+                            >
+                                التالي
+                            </button>
                         </div>
 
                         <button
@@ -227,11 +246,27 @@ export default function PrintPage() {
 
             {codes.length === 0 && !loadingCodes && (
                 <div className="text-center py-20 text-gray-400 print:hidden">
-                    الرجاء اختيار دفعة وعرض الأكواد
+                    الرجاء اختيار دفعة وجلب الأكواد
                 </div>
             )}
 
             <style jsx global>{`
+                .sticker-card-bg {
+                    height: 50mm;
+                    width: 100%;
+                    font-size: 8px;
+                    /* Wavy Red Pattern */
+                    background: repeating-radial-gradient(circle at 0 0, transparent 0, #991b1b 7px), repeating-linear-gradient(#b91c1c, #b91c1c);
+                    background-color: #b91c1c;
+                    
+                    /* SVG Overlay */
+                    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' viewBox='0 0 200 280' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M 100 5 C 150 80 195 130 195 180 A 95 95 0 0 1 5 180 C 5 130 50 80 100 5 Z' fill='white' stroke='%234a0404' stroke-width='5' /%3e%3c/svg%3e");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: contain;
+                    padding: 12mm 4mm 4mm 4mm;
+                }
+
                 @media print {
                     @page { 
                         size: A4; 
