@@ -37,17 +37,21 @@ function StickerCard({ code }: StickerCardProps) {
 
     return (
         <div
-            className="flex flex-col items-center justify-center text-center relative break-inside-avoid"
+            className="flex flex-col items-center justify-center text-center relative break-inside-avoid shadow-sm"
             style={{
-                height: '50mm', // Reduced height to 50mm for maximum safety
+                height: '50mm',
                 width: '100%',
                 fontSize: '8px',
-                // Updated SVG viewBox to 280 to fully include the bottom arc + stroke
+                // Wavy Red Pattern (Using a high-quality radial gradient to simulate "wavy"/texture)
+                background: `repeating-radial-gradient(circle at 0 0, transparent 0, #991b1b 7px), repeating-linear-gradient(#b91c1c, #b91c1c)`,
+                backgroundColor: '#b91c1c',
+
+                // SVG Overlay (Teardrop)
                 backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' viewBox='0 0 200 280' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M 100 5 C 150 80 195 130 195 180 A 95 95 0 0 1 5 180 C 5 130 50 80 100 5 Z' fill='white' stroke='${encodeURIComponent(themeColor)}' stroke-width='5' /%3e%3c/svg%3e")`,
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
-                padding: '12mm 4mm 4mm 4mm', // Adjusted padding
+                padding: '12mm 4mm 4mm 4mm',
             }}
         >
             <div className="flex flex-col items-center justify-between h-full w-full max-w-[90%] mx-auto pt-1">
@@ -186,7 +190,7 @@ export default function PrintPage() {
 
             {/* Print Area */}
             <div
-                className="grid gap-1 mx-auto print:mx-0 print:w-full bg-red-700 p-2"
+                className="grid gap-0.5 mx-auto print:mx-0 print:w-full bg-white"
                 style={{
                     gridTemplateColumns: `repeat(${cols}, 1fr)`,
                     width: '100%'
@@ -207,10 +211,10 @@ export default function PrintPage() {
                 @media print {
                     @page { 
                         size: A4; 
-                        margin: 0; /* Remove margin to bleed color if possible, or keep small */
+                        margin: 5mm; 
                     }
                     body { 
-                        background-color: #b91c1c !important; /* Red Background */
+                        background-color: white !important; 
                         -webkit-print-color-adjust: exact !important; 
                         print-color-adjust: exact !important;
                     }
@@ -218,9 +222,8 @@ export default function PrintPage() {
                     .grid {
                         display: grid !important;
                         grid-template-columns: repeat(4, 1fr) !important;
-                        gap: 1mm !important; /* Small gap for red line */
-                        background-color: #b91c1c !important;
-                        padding: 2mm !important;
+                        gap: 1mm !important; /* Visual gap for cutting lines */
+                        background-color: white !important;
                     }
                 }
             `}</style>
