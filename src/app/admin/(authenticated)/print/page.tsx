@@ -106,6 +106,7 @@ export default function PrintPage() {
     const [batches, setBatches] = useState<string[]>([]);
     const [selectedBatch, setSelectedBatch] = useState('');
     const [codes, setCodes] = useState<any[]>([]);
+    const [printRange, setPrintRange] = useState({ start: 1, end: 1000 });
     const [loadingBatches, setLoadingBatches] = useState(true);
     const [loadingCodes, setLoadingCodes] = useState(false);
 
@@ -177,12 +178,35 @@ export default function PrintPage() {
                             {loadingCodes ? 'جاري التحميل...' : 'عرض'}
                         </button>
 
+                        <div className="flex items-center gap-2">
+                            <div className="flex-1">
+                                <label className="block text-xs font-bold text-gray-500 mb-1">من كرت #</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={printRange.start}
+                                    onChange={e => setPrintRange({ ...printRange, start: parseInt(e.target.value) })}
+                                    className="w-20 p-2 border rounded-lg text-sm text-center"
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <label className="block text-xs font-bold text-gray-500 mb-1">إلى كرت #</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={printRange.end}
+                                    onChange={e => setPrintRange({ ...printRange, end: parseInt(e.target.value) })}
+                                    className="w-20 p-2 border rounded-lg text-sm text-center"
+                                />
+                            </div>
+                        </div>
+
                         <button
                             onClick={handlePrint}
                             disabled={codes.length === 0}
                             className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-[#AA8C2C] disabled:opacity-50"
                         >
-                            طباعة
+                            طباعة ({Math.max(0, Math.min(codes.length, printRange.end) - printRange.start + 1)})
                         </button>
                     </div>
                 </div>
@@ -196,7 +220,7 @@ export default function PrintPage() {
                     width: '100%'
                 }}
             >
-                {codes.map((item, index) => (
+                {codes.slice(printRange.start - 1, printRange.end).map((item, index) => (
                     <StickerCard key={item._id || index} code={item.code} />
                 ))}
             </div>
