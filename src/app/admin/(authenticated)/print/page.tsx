@@ -306,21 +306,7 @@ export default function PrintPage() {
         }
     };
 
-    const handleNextPage = () => {
-        const step = 100;
-        const newStart = printRange.end + 1;
-        const newEnd = Math.min(codes.length, newStart + step - 1);
-        if (newStart <= codes.length) {
-            setPrintRange({ start: newStart, end: newEnd });
-        }
-    };
 
-    const handlePrevPage = () => {
-        const step = 100;
-        const newStart = Math.max(1, printRange.start - step);
-        const newEnd = newStart + step - 1;
-        setPrintRange({ start: newStart, end: newEnd });
-    };
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -358,35 +344,45 @@ export default function PrintPage() {
                             {loadingCodes ? 'جاري التحميل...' : 'جلب الأكواد'}
                         </button>
 
-                        {/* Pagination Controls */}
-                        <div className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg border">
-                            <button
-                                onClick={handlePrevPage}
-                                disabled={printRange.start <= 1}
-                                className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
-                            >
-                                السابق
-                            </button>
-
-                            <div className="flex items-center gap-2 text-xs font-bold font-mono">
-                                <span>{printRange.start}</span>
-                                <span>-</span>
-                                <span>{printRange.end}</span>
+                        {/* Manual Range Controls */}
+                        <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-lg border">
+                            <div className="flex flex-col items-center">
+                                <label className="text-[10px] text-gray-500 font-bold mb-1">من</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max={codes.length}
+                                    value={printRange.start}
+                                    onChange={(e) => {
+                                        const val = parseInt(e.target.value) || 1;
+                                        setPrintRange(prev => ({ ...prev, start: val }));
+                                    }}
+                                    className="w-20 p-1 border rounded text-center text-sm font-bold"
+                                />
                             </div>
 
-                            <button
-                                onClick={handleNextPage}
-                                disabled={printRange.end >= codes.length}
-                                className="px-3 py-1 bg-white border rounded hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
-                            >
-                                التالي
-                            </button>
+                            <span className="text-gray-400 mt-4">-</span>
+
+                            <div className="flex flex-col items-center">
+                                <label className="text-[10px] text-gray-500 font-bold mb-1">إلى</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max={codes.length}
+                                    value={printRange.end}
+                                    onChange={(e) => {
+                                        const val = parseInt(e.target.value) || 1;
+                                        setPrintRange(prev => ({ ...prev, end: val }));
+                                    }}
+                                    className="w-20 p-1 border rounded text-center text-sm font-bold"
+                                />
+                            </div>
                         </div>
 
                         <button
                             onClick={handlePrint}
                             disabled={codes.length === 0}
-                            className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-[#AA8C2C] disabled:opacity-50"
+                            className="bg-[#D4AF37] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-[#AA8C2C] disabled:opacity-50 h-full mt-auto mb-1"
                         >
                             طباعة ({Math.max(0, Math.min(codes.length, printRange.end) - printRange.start + 1)})
                         </button>
