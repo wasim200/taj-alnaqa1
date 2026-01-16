@@ -186,7 +186,7 @@ export default function PrintPage() {
 
             {/* Print Area */}
             <div
-                className="grid gap-1 mx-auto print:mx-0 print:w-full"
+                className="grid gap-1 mx-auto print:mx-0 print:w-full bg-red-700 p-2"
                 style={{
                     gridTemplateColumns: `repeat(${cols}, 1fr)`,
                     width: '100%'
@@ -207,17 +207,20 @@ export default function PrintPage() {
                 @media print {
                     @page { 
                         size: A4; 
-                        margin: 5mm; 
+                        margin: 0; /* Remove margin to bleed color if possible, or keep small */
                     }
                     body { 
-                        background: white; 
-                        -webkit-print-color-adjust: exact; 
+                        background-color: #b91c1c !important; /* Red Background */
+                        -webkit-print-color-adjust: exact !important; 
+                        print-color-adjust: exact !important;
                     }
                     /* Ensure grid flows correctly */
                     .grid {
                         display: grid !important;
                         grid-template-columns: repeat(4, 1fr) !important;
-                        gap: 6mm !important;
+                        gap: 1mm !important; /* Small gap for red line */
+                        background-color: #b91c1c !important;
+                        padding: 2mm !important;
                     }
                 }
             `}</style>
