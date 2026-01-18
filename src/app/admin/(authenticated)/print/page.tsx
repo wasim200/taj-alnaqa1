@@ -71,7 +71,7 @@ function StickerCard({ code }: StickerCardProps) {
                 {/* 2. Code */}
                 <div className="my-0.5 w-full flex justify-center">
                     <span
-                        className="px-3 py-0.5 rounded-md text-[11px] font-mono font-black tracking-widest block"
+                        className="px-3 py-0.5 rounded-md text-[14px] font-mono font-black tracking-widest block"
                         style={{
                             backgroundColor: '#e5e7eb',
                             color: '#000000',
