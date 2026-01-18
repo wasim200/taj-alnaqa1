@@ -344,6 +344,47 @@ export default function PrintPage() {
                         </div>
 
                         <button
+                            onClick={async () => {
+                                if (!selectedBatch) return;
+                                if (!confirm(`هل أنت متأكد من حذف الدفعة "${selectedBatch}"؟ لا يمكن التراجع عن هذا الإجراء.`)) return;
+
+                                setLoadingBatches(true);
+                                try {
+                                    const res = await fetch('/api/admin/batches', {
+                                        method: 'DELETE',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ batchName: selectedBatch })
+                                    });
+                                    const data = await res.json();
+
+                                    if (data.success) {
+                                        alert('تم حذف الدفعة بنجاح');
+                                        setSelectedBatch('');
+                                        setCodes([]);
+                                        // Refresh batches
+                                        fetch('/api/admin/batches')
+                                            .then(res => res.json())
+                                            .then(d => {
+                                                if (d.success) setBatches(d.batches);
+                                            });
+                                    } else {
+                                        alert(data.error || 'فشل حذف الدفعة');
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                    alert('حدث خطأ أثناء الحذف');
+                                } finally {
+                                    setLoadingBatches(false);
+                                }
+                            }}
+                            disabled={!selectedBatch || loadingCodes}
+                            className="bg-red-100 text-red-700 px-3 py-2 rounded-lg text-sm font-bold hover:bg-red-200 disabled:opacity-50 border border-red-200"
+                            title="حذف الدفعة المحددة"
+                        >
+                            🗑️ حذف
+                        </button>
+
+                        <button
                             onClick={loadCodes}
                             disabled={!selectedBatch || loadingCodes}
                             className="bg-[#004D25] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#003318] disabled:opacity-50"
