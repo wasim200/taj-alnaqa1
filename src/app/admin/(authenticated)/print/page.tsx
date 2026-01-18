@@ -44,9 +44,9 @@ function StickerCard({ code }: StickerCardProps) {
                 height: '50mm',
                 width: '100%',
                 fontSize: '8px',
-                // Wavy Red Pattern (Using a high-quality radial gradient to simulate "wavy"/texture)
-                background: `repeating-radial-gradient(circle at 0 0, transparent 0, #991b1b 7px), repeating-linear-gradient(#b91c1c, #b91c1c)`,
-                backgroundColor: '#b91c1c',
+                // White background (Clean)
+                backgroundColor: 'white',
+                border: '1px solid #eee', // Light border to define the card area
 
                 // SVG Overlay (Teardrop)
                 backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' viewBox='0 0 200 280' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M 100 5 C 150 80 195 130 195 180 A 95 95 0 0 1 5 180 C 5 130 50 80 100 5 Z' fill='white' stroke='${encodeURIComponent(themeColor)}' stroke-width='5' /%3e%3c/svg%3e")`,
