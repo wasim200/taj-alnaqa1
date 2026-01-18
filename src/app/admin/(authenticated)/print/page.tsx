@@ -88,7 +88,14 @@ function StickerCard({ code }: StickerCardProps) {
                     <p className="text-[6.5px] font-bold leading-tight" style={{ color: 'black' }}>
                         لدخولك السحب اخدش وارسل الرمز
                     </p>
-                    <p className="text-[5px] font-bold leading-tight" style={{ color: 'black' }}>
+                    <p
+                        className="text-[8px] font-bold leading-tight mt-0.5"
+                        style={{
+                            color: 'black',
+                            transform: 'scaleX(1.15)',
+                            display: 'inline-block'
+                        }}
+                    >
                         والاسم عبر الواتساب للرقم:
                     </p>
                     <p className="text-[8px] font-black mt-0.5 flex items-center justify-center gap-1" dir="ltr" style={{ color: 'black' }}>
