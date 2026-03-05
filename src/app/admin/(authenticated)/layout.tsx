@@ -130,7 +130,7 @@ export default function AdminLayout({
                 <div className="mt-8 pt-4 border-t border-[#D4AF37]/20 text-center text-xs text-gray-400">
                     <p className="mb-1">&copy; {new Date().getFullYear()} تاج النقاء</p>
                     <p className="text-[10px]">
-                        تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors">جلامور ديزاين</a>
+                        تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="text-[#004d25] hover:text-[#D4AF37] transition-colors font-bold">Waseem Al-Junaid</a>
                     </p>
                 </div>
             </aside>

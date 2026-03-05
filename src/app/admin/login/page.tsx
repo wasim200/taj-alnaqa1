@@ -101,7 +101,7 @@ export default function AdminLogin() {
                         &copy; {new Date().getFullYear()} مؤسسة تاج النقاء
                     </p>
                     <p className="text-gray-400 text-[10px]">
-                        تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors">جلامور ديزاين</a>
+                        تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="text-[#004d25] hover:text-[#D4AF37] transition-colors font-bold">Waseem Al-Junaid</a>
                     </p>
                 </div>
             </div>
