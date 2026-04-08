@@ -1,0 +1,15 @@
+MONGODB_URI=mongodb+srv://tajalnaqa_db_user:usHhStPsadxtVzgR@cluster0.tdh03or.mongodb.net/taj_alnaqa?appName=Cluster0
+ADMIN_USER=admin
+ADMIN_PASSWORD=admin123
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+
+
+
+
+
+·ﬁœ «‰‘«¡… ﬁ«⁄œ… «·»Ì«‰«  «·ÃœÌœ… ÊÊ÷⁄  «·„·›«  ›Ì «·„Ã·œ 
+
+v2-nextjs_db_user «”„ «·„” Œœ„
+lk1WdQNBCbpCJrGu ﬂ·„… «·„—Ê—
+«·—«»ÿ : mongodb+srv://v2-nextjs_db_user:lk1WdQNBCbpCJrGu@cluster2.h6atciy.mongodb.net/?appName=Cluster2
