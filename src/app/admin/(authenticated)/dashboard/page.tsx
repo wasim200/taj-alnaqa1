@@ -57,7 +57,7 @@ export default function Dashboard() {
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'نعم، قم بالاستعادة والإحلال!',
+            confirmButtonText: 'نعم، قم بالاستعادة!',
             cancelButtonText: 'إلغاء'
         });
 
@@ -198,15 +198,15 @@ export default function Dashboard() {
                 ))}
             </div>
 
-            {/* Danger Zone & Management - Super Admin Only */}
-            {user?.role === 'superadmin' && (
+            {/* Danger Zone & Management */}
+            {(user?.role === 'superadmin' || user?.permissions?.includes('system_management')) && (
                 <section className="glass-card p-6 border-t-4 border-blue-500">
-                    <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={handleFileChange} 
-                        accept=".json" 
-                        className="hidden" 
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        accept=".json"
+                        className="hidden"
                     />
                     <div className="flex justify-between items-center flex-wrap gap-4">
                         <div>
@@ -224,7 +224,7 @@ export default function Dashboard() {
                                 <Upload className="w-5 h-5" />
                                 {isRestoring ? 'جاري الاستعادة...' : 'استعادة نسخة احتياطية'}
                             </button>
-                            
+
                             <button
                                 onClick={handleBackup}
                                 disabled={isRestoring || isBackingUp}
@@ -233,7 +233,7 @@ export default function Dashboard() {
                                 <Download className="w-5 h-5" />
                                 {isBackingUp ? 'جاري السحب...' : 'نسخ احتياطي (JSON)'}
                             </button>
-                            
+
                             <button
                                 onClick={handleReset}
                                 className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition font-bold flex items-center gap-2"

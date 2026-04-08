@@ -6,13 +6,18 @@ import { logActivity } from '@/lib/log-activity';
 export async function DELETE(req: Request) {
     try {
         await dbConnect();
+        const adminUsername = req.headers.get('x-admin-username') || 'Unknown';
+        const ip = req.headers.get('x-forwarded-for') || 'Unknown';
+
+        const adminUser = await User.findOne({ username: adminUsername });
+        if (!adminUser || (adminUser.role !== 'superadmin' && !adminUser.permissions.includes('system_management'))) {
+            return NextResponse.json({ success: false, message: 'غير مصرح للتهيئة' }, { status: 403 });
+        }
 
         // Delete all documents from collections
         await Code.deleteMany({});
         await Participant.deleteMany({});
 
-        const adminUsername = req.headers.get('x-admin-username') || 'Unknown';
-        const ip = req.headers.get('x-forwarded-for') || 'Unknown';
         await logActivity(adminUsername, 'SYSTEM_RESET', 'قام بتهيئة النظام وحذف جميع البيانات', ip);
 
         return NextResponse.json({

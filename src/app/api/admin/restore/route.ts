@@ -14,7 +14,7 @@ export async function POST(req: Request) {
         }
 
         const adminUser = await User.findOne({ username: adminUsername });
-        if (!adminUser || adminUser.role !== 'superadmin') {
+        if (!adminUser || (adminUser.role !== 'superadmin' && !adminUser.permissions.includes('system_management'))) {
             await logActivity(adminUsername, 'RESTORE_FAILED', 'محاولة غير مصرحة لاستعادة نسخة احتياطية');
             return NextResponse.json({ success: false, message: 'غير مصرح لك باستعادة البيانات' }, { status: 403 });
         }

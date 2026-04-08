@@ -17,7 +17,7 @@ export async function GET(req: Request) {
         }
 
         const adminUser = await User.findOne({ username: adminUsername });
-        if (!adminUser || adminUser.role !== 'superadmin') {
+        if (!adminUser || (adminUser.role !== 'superadmin' && !adminUser.permissions.includes('system_management'))) {
             await logActivity(adminUsername, 'BACKUP_FAILED', 'محاولة غير مصرحة لأخذ نسخة احتياطية');
             return new NextResponse(JSON.stringify({ success: false, message: 'غير مصرح لك بنسخ البيانات' }), {
                 status: 403,

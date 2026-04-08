@@ -23,7 +23,8 @@ export default function UsersPage() {
         { id: 'print', label: 'طباعة الكروت' },
         { id: 'manual_entry', label: 'إدخال يدوي' },
         { id: 'participants', label: 'عرض المشتركين' },
-        { id: 'winner', label: 'إجراء السحب' }
+        { id: 'winner', label: 'إجراء السحب' },
+        { id: 'system_management', label: 'إدارة النظام (النسخ والتهيئة)' }
     ];
 
     const fetchUsers = async () => {
