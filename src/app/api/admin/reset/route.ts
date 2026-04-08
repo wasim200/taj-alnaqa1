@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
-import { Code, Participant } from '@/models/Schema';
+import { Code, Participant, User } from '@/models/Schema';
 import { logActivity } from '@/lib/log-activity';
 
 export async function DELETE(req: Request) {
