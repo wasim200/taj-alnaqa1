@@ -1,11 +1,12 @@
 "use client";
 
-import { Users, CreditCard, CheckCircle, Clock, Trash2 } from 'lucide-react';
+import { Users, CreditCard, CheckCircle, Clock, Trash2, Download } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(true);
+    const [isBackingUp, setIsBackingUp] = useState(false);
     const [stats, setStats] = useState({
         totalCodes: '0',
         usedCodes: '0',
@@ -36,6 +37,41 @@ export default function Dashboard() {
             setUser(JSON.parse(storedUser));
         }
     }, []);
+
+    const handleBackup = async () => {
+        setIsBackingUp(true);
+        try {
+            const res = await fetch('/api/admin/backup', {
+                method: 'GET',
+                headers: { 'x-admin-username': user?.username || 'Unknown' }
+            });
+
+            if (!res.ok) throw new Error('فشل النسخ الاحتياطي');
+
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Taj_AlNqaa_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            Swal.fire({
+                title: 'تم النسخ بنجاح',
+                text: 'تم إنشاء وتحميل ملف النسخة الاحتياطية بنجاح.',
+                icon: 'success',
+                confirmButtonColor: '#004D25',
+                confirmButtonText: 'حسناً'
+            });
+
+        } catch (error) {
+            Swal.fire('خطأ!', 'حدث خطأ أثناء الاتصال ومحاولة اخذ نسخة احتياطية.', 'error');
+        } finally {
+            setIsBackingUp(false);
+        }
+    };
 
     const handleReset = async () => {
         const result = await Swal.fire({
@@ -109,23 +145,34 @@ export default function Dashboard() {
                 ))}
             </div>
 
-            {/* Danger Zone - Super Admin Only */}
+            {/* Danger Zone & Management - Super Admin Only */}
             {user?.role === 'superadmin' && (
-                <section className="glass-card p-6 border-t-4 border-red-500">
+                <section className="glass-card p-6 border-t-4 border-blue-500">
                     <div className="flex justify-between items-center flex-wrap gap-4">
                         <div>
-                            <h3 className="text-xl font-bold text-red-600 flex items-center gap-2">
-                                تهيئة النظام
+                            <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                إدارة وصيانة النظام
                             </h3>
-                            <p className="text-gray-500 text-sm mt-1">إعادة تهيئة النظام وحذف جميع البيانات</p>
+                            <p className="text-gray-500 text-sm mt-1">نسخ احتياطي للبيانات أو إعادة تهيئة النظام كاملاً</p>
                         </div>
-                        <button
-                            onClick={handleReset}
-                            className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition font-bold flex items-center gap-2"
-                        >
-                            <Trash2 className="w-5 h-5" />
-                            إعادة تهيئة قاعدة البيانات
-                        </button>
+                        <div className="flex flex-wrap gap-3">
+                            <button
+                                onClick={handleBackup}
+                                disabled={isBackingUp}
+                                className="bg-blue-50 text-blue-600 border border-blue-200 px-6 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold flex items-center gap-2 disabled:opacity-50"
+                            >
+                                <Download className="w-5 h-5" />
+                                {isBackingUp ? 'جاري السحب...' : 'نسخ احتياطي (JSON)'}
+                            </button>
+                            
+                            <button
+                                onClick={handleReset}
+                                className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition font-bold flex items-center gap-2"
+                            >
+                                <Trash2 className="w-5 h-5" />
+                                إعادة تهيئة قاعدة البيانات
+                            </button>
+                        </div>
                     </div>
                 </section>
             )}

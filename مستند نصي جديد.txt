@@ -4,7 +4,7 @@ ADMIN_PASSWORD=admin123
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 
-
+mongodb+srv://tajalnaqa_db_user:usHhStPsadxtVzgR@cluster0.tdh03or.mongodb.net/taj_alnaqa?appName=Cluster0
 
 
 

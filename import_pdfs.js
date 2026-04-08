@@ -34,8 +34,7 @@ const CODE_REGEX = /(FX|FG)([A-Z0-9]{5})/g;
 
 async function extractCodesFromPdf(filePath) {
     const dataBuffer = fs.readFileSync(filePath);
-    const parsePdf = typeof pdf === 'function' ? pdf : (pdf.default || pdf.pdf);
-    const data = await parsePdf(dataBuffer);
+    const data = await pdf(dataBuffer);
     
     // Process text
     const text = data.text;
