@@ -169,8 +169,8 @@ export default function Dashboard() {
         <div className="animate-fadeInUp space-y-8">
             <header className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#004D25]">لوحة القيادة</h1>
-                    <p className="text-gray-500 mt-1">مرحباً بك في نظام تاج النقاء</p>
+                    <h1 className="text-4xl font-bold text-[#004D25] mb-2">لوحة القيادة</h1>
+                    <p className="text-gray-500 text-lg">يا هلا {user?.username}، مرحباً بك في نظام تاج النقاء</p>
                 </div>
                 <div className="flex gap-4 items-center">
                     <div className="bg-white px-4 py-2 rounded-lg shadow-sm text-sm font-bold text-[#004D25]">

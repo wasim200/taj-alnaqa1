@@ -91,15 +91,22 @@ export default function AdminLayout({
                 md:relative md:translate-x-0 md:shadow-none
                 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
             `}>
-                <div className="hidden md:flex items-center gap-3 mb-10">
+                <div className="hidden md:flex items-center gap-3 mb-6">
                     <Trophy className="text-[#D4AF37] w-8 h-8" />
                     <span className="text-xl font-bold">تاج النقاء</span>
                 </div>
                 {/* Mobile logo inside sidebar hidden to avoid duplicate if menu is translucent, but keeps structure consistent */}
-                <div className="md:hidden flex items-center gap-3 mb-8 pb-4 border-b border-[#D4AF37]/20">
+                <div className="md:hidden flex items-center gap-3 mb-6 pb-4 border-b border-[#D4AF37]/20">
                     <Trophy className="text-[#D4AF37] w-6 h-6" />
                     <span className="text-lg font-bold">القائمة الرئيسية</span>
                 </div>
+
+                {user && (
+                    <div className="mb-8 px-4 py-3 bg-[#004d25]/50 rounded-xl border border-[#D4AF37]/20 text-center shadow-inner">
+                        <p className="text-sm text-gray-300 mb-1">يا هلا،</p>
+                        <p className="text-xl font-bold text-[#D4AF37] tracking-wider">{user.username}</p>
+                    </div>
+                )}
 
                 <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar">
                     {navItems.map((item) => {
