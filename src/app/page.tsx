@@ -190,7 +190,7 @@ export default function Home() {
             &copy; {new Date().getFullYear()} مؤسسة تاج النقاء. جميع الحقوق محفوظة.
           </p>
           <p className="text-gray-400 text-xs mt-2">
-            تطوير وتكويد: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="text-[#004d25] hover:text-[#D4AF37] transition-colors font-bold">Waseem Al-Junaid</a>
+            برمجة وتطوير: <a href="https://wa.me/967781911651" target="_blank" rel="noopener noreferrer" className="text-[#004d25] hover:text-[#D4AF37] transition-colors font-bold">Waseem Al-Junaid</a>
           </p>
         </div>
 

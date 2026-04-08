@@ -198,7 +198,7 @@ export default function Dashboard() {
                 ))}
             </div>
 
-            {/* Danger Zone & Management */}
+            {/* System Management - Backup & Restore */}
             {(user?.role === 'superadmin' || user?.permissions?.includes('system_management')) && (
                 <section className="glass-card p-6 border-t-4 border-blue-500">
                     <input
@@ -211,9 +211,9 @@ export default function Dashboard() {
                     <div className="flex justify-between items-center flex-wrap gap-4">
                         <div>
                             <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                إدارة وصيانة النظام
+                                إدارة بيانات النظام
                             </h3>
-                            <p className="text-gray-500 text-sm mt-1">نسخ احتياطي للبيانات أو إعادة تهيئة النظام كاملاً</p>
+                            <p className="text-gray-500 text-sm mt-1">إنشاء أو استعادة نسخة احتياطية للبيانات (JSON)</p>
                         </div>
                         <div className="flex flex-wrap gap-3">
                             <button
@@ -233,15 +233,28 @@ export default function Dashboard() {
                                 <Download className="w-5 h-5" />
                                 {isBackingUp ? 'جاري السحب...' : 'نسخ احتياطي (JSON)'}
                             </button>
-
-                            <button
-                                onClick={handleReset}
-                                className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition font-bold flex items-center gap-2"
-                            >
-                                <Trash2 className="w-5 h-5" />
-                                إعادة تهيئة قاعدة البيانات
-                            </button>
                         </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Danger Zone - Super Admin Only */}
+            {user?.role === 'superadmin' && (
+                <section className="glass-card p-6 border-t-4 border-red-500 mt-6">
+                    <div className="flex justify-between items-center flex-wrap gap-4">
+                        <div>
+                            <h3 className="text-xl font-bold text-red-600 flex items-center gap-2">
+                                تهيئة النظام (خطر)
+                            </h3>
+                            <p className="text-gray-500 text-sm mt-1">إعادة تهيئة النظام وحذف جميع البيانات (للمدير العام فقط)</p>
+                        </div>
+                        <button
+                            onClick={handleReset}
+                            className="bg-red-50 text-red-600 border border-red-200 px-6 py-3 rounded-lg hover:bg-red-600 hover:text-white transition font-bold flex items-center gap-2"
+                        >
+                            <Trash2 className="w-5 h-5" />
+                            إعادة تهيئة قاعدة البيانات
+                        </button>
                     </div>
                 </section>
             )}

@@ -10,7 +10,7 @@ export async function DELETE(req: Request) {
         const ip = req.headers.get('x-forwarded-for') || 'Unknown';
 
         const adminUser = await User.findOne({ username: adminUsername });
-        if (!adminUser || (adminUser.role !== 'superadmin' && !adminUser.permissions.includes('system_management'))) {
+        if (!adminUser || adminUser.role !== 'superadmin') {
             return NextResponse.json({ success: false, message: 'غير مصرح للتهيئة' }, { status: 403 });
         }
 

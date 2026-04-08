@@ -24,7 +24,7 @@ export default function UsersPage() {
         { id: 'manual_entry', label: 'إدخال يدوي' },
         { id: 'participants', label: 'عرض المشتركين' },
         { id: 'winner', label: 'إجراء السحب' },
-        { id: 'system_management', label: 'إدارة النظام (النسخ والتهيئة)' }
+        { id: 'system_management', label: 'إدارة النظام (النسخ والاستعادة)' }
     ];
 
     const fetchUsers = async () => {
