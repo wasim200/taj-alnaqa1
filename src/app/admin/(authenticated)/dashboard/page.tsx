@@ -1,12 +1,14 @@
 "use client";
 
-import { Users, CreditCard, CheckCircle, Clock, Trash2, Download } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Users, CreditCard, CheckCircle, Clock, Trash2, Download, Upload } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [isBackingUp, setIsBackingUp] = useState(false);
+    const [isRestoring, setIsRestoring] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [stats, setStats] = useState({
         totalCodes: '0',
         usedCodes: '0',
@@ -37,6 +39,57 @@ export default function Dashboard() {
             setUser(JSON.parse(storedUser));
         }
     }, []);
+
+    const triggerRestore = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const result = await Swal.fire({
+            title: 'تحذير هام جداً!',
+            text: 'استعادة النسخة الاحتياطية ستقوم بحذف جميع البيانات الحالية واستبدالها ببيانات الملف المرفوع! هل أنت متأكد؟',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'نعم، قم بالاستعادة والإحلال!',
+            cancelButtonText: 'إلغاء'
+        });
+
+        if (result.isConfirmed) {
+            setIsRestoring(true);
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/admin/restore', {
+                    method: 'POST',
+                    headers: { 'x-admin-username': user?.username || 'Unknown' },
+                    body: formData
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    await Swal.fire('نجاح!', 'تم استعادة النظام من النسخة الاحتياطية بنجاح.', 'success');
+                    window.location.reload();
+                } else {
+                    Swal.fire('خطأ!', data.message || 'فشلت الاستعادة', 'error');
+                }
+            } catch (error) {
+                Swal.fire('خطأ!', 'حدث خطأ في الاتصال بالخادم.', 'error');
+            } finally {
+                setIsRestoring(false);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            }
+        } else {
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    };
 
     const handleBackup = async () => {
         setIsBackingUp(true);
@@ -148,6 +201,13 @@ export default function Dashboard() {
             {/* Danger Zone & Management - Super Admin Only */}
             {user?.role === 'superadmin' && (
                 <section className="glass-card p-6 border-t-4 border-blue-500">
+                    <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleFileChange} 
+                        accept=".json" 
+                        className="hidden" 
+                    />
                     <div className="flex justify-between items-center flex-wrap gap-4">
                         <div>
                             <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
@@ -157,8 +217,17 @@ export default function Dashboard() {
                         </div>
                         <div className="flex flex-wrap gap-3">
                             <button
+                                onClick={triggerRestore}
+                                disabled={isRestoring || isBackingUp}
+                                className="bg-green-50 text-green-600 border border-green-200 px-6 py-3 rounded-lg hover:bg-green-600 hover:text-white transition font-bold flex items-center gap-2 disabled:opacity-50"
+                            >
+                                <Upload className="w-5 h-5" />
+                                {isRestoring ? 'جاري الاستعادة...' : 'استعادة نسخة احتياطية'}
+                            </button>
+                            
+                            <button
                                 onClick={handleBackup}
-                                disabled={isBackingUp}
+                                disabled={isRestoring || isBackingUp}
                                 className="bg-blue-50 text-blue-600 border border-blue-200 px-6 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold flex items-center gap-2 disabled:opacity-50"
                             >
                                 <Download className="w-5 h-5" />
